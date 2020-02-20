@@ -23,7 +23,7 @@ WIP
 
 WIP
 
-## Technology to be Used
+## Technology We Will Use
 
 TBD
 
