@@ -6,7 +6,7 @@ project-cscc09_alex_chedy created by GitHub Classroom
 
 ## Project Title
 
-TBD
+TweetWithMe
 
 ## Team Members
 
@@ -16,7 +16,7 @@ Chedy Sankar
 
 ## Web Application
 
-WIP
+A collaborative web app that lets users work together to edit, save, and send tweets (through a user's account) in real time.
 
 ## Key Features for Beta Version
 
@@ -28,8 +28,29 @@ WIP
 
 ## Technology We Will Use
 
-TBD
+### Languages
+
+- JavaScript (+ Node.js)
+
+### Databases
+
+- MongoDB
+
+### Communication
+
+- WebSockets
+
+### Frameworks
+
+- Express.js
+- Bootstrap
+
+### APIs
+
+- Twitter
 
 ## Top 5 Technical Challenges
 
-TBD
+- Learning how to setup WebSockets
+- Synchronization across all users with real time updates and saves
+- Learning how to use Twitter API, especially with media
