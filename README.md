@@ -6,7 +6,7 @@ project-cscc09_alex_chedy created by GitHub Classroom
 
 ## Project Title
 
-TweetWithMe
+Drawesome
 
 ## Team Members
 
@@ -16,21 +16,24 @@ Chedy Sankar
 
 ## Web Application
 
-A collaborative web app that lets users work together to edit, save, and send tweets (through a user's account) in real time.
+A collaborative web app that lets users draw and save a picture together in real time on a blank canvas or uploaded image.
 
 ## Key Features for Beta Version
 
-WIP
+- Standard user management and security
+- Collaborative drawing (all users can see updates and make contributions in real time)
+- Manual saving of canvas
 
 ## Additional Features for Final Version
 
-WIP
+- Autosaving of canvas
+- Image upload onto canvas
 
 ## Technology We Will Use
 
 ### Languages
 
-- JavaScript (+ Node.js)
+- JavaScript
 
 ### Databases
 
@@ -38,19 +41,24 @@ WIP
 
 ### Communication
 
-- WebSockets
+- REST API
+- WebSockets/WebRTC (Undecided on specific implementation)
 
-### Frameworks
+### Frameworks and Libraries
 
+- Vue.js
+- Node.js
 - Express.js
-- Bootstrap
-
-### APIs
-
-- Twitter
+- Other supporting libraries, but currently undecided:
+    - Styling (Bootstrap/Material Design)
+    - Canvas (Paper.js/Fabric.js)
+    - WebRTC (TogetherJS/PeerJS/DataChannel.js)
+    - WebSockets (express-ws)
 
 ## Top 5 Technical Challenges
 
-- Learning how to setup WebSockets
-- Synchronization across all users with real time updates and saves
-- Learning how to use Twitter API, especially with media
+- Setting up WebSockets/WebRTC securely
+- Setting up 2D canvas manipulation with Vue
+- Synchronization across users
+- Autosaving changes to canvas
+- Learning and deploying new technologies
