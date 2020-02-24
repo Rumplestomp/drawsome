@@ -44,6 +44,11 @@ A collaborative web app that lets users draw and save a picture together in real
 - REST API
 - WebSockets/WebRTC (Undecided on specific implementation)
 
+### Infrastructure
+
+- Docker
+- GCP
+
 ### Frameworks and Libraries
 
 - Vue.js
