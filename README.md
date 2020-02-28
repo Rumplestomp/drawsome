@@ -54,6 +54,7 @@ A collaborative web app that lets users draw and save a picture together in real
 - Vue.js
 - Node.js
 - Express.js
+- GraphQL
 - Other supporting libraries, but currently undecided:
     - Styling (Bootstrap/Material Design)
     - Canvas (Paper.js/Fabric.js)
