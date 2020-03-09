@@ -1,6 +1,6 @@
 # drawesome
 
-> A fullstack web application for CSCC09
+> Frontend code for a Drawesome; A collaborative image editor web application for CSCC09
 
 ## Build Setup
 
