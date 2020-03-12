@@ -9,6 +9,4 @@ app.get("/", (req, res, next) => {
     res.send(["Aiight bud"]);
 });
 
-
 app.listen(process.env.PORT || 8081); // client is already running on 8080
-
