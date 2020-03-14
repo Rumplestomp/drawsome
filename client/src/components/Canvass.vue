@@ -6,7 +6,16 @@
             <canvas id="main-canvass" v-bind:height=canvHeight v-bind:width=canvWidth></canvas>
         </div> -->
         <div>
-            <v-stage ref='stage' :config='configKonva'>
+            <!-- RELOAD CONFIGKONVA (watch) BASED ON HEIGHT WIDTH  -->
+            <v-stage ref='stage' :config='defaultConfigKonva'>
+                <!-- OPTIONAL BACKGROUND IMAGE LAYER (RESIZES CANVAS)-->
+                <v-layer ref="background-image" v-if="backgroundImage">
+                  <v-image v-bind:config="{
+                    image: backgroundImageLayer,
+                  }">
+                  </v-image>
+                </v-layer>
+                <!-- SINGLE TEST LAYER WITH MANY SHAPES -->
                 <v-layer ref='layer'>
                   <v-regular-polygon
                     v-for="item in list"
@@ -26,6 +35,7 @@
                     }"
                   />
                 </v-layer>
+                <!-- END TEST LAYER -->
             </v-stage>
         </div>
     </div>
@@ -36,23 +46,25 @@ const maxSides = 7;
 const minSides = 3;
 export default {
   name: 'Canvass',
-  props: ['yeet'],
+  props: ['yeet', 'backgroundImage'],
   data: () => ({
     // need list of graphic layers in the canvas
     list: [],
     // dragItemId: null
-    configKonva: {
+    // default height and width
+    defaultConfigKonva: {
       width: 1280,
       height: 720,
     },
   }),
 
+  // this is all placeholder shits.
   mounted() {
     for (let i = 0; i < 20; i += 1) {
       this.list.push({
         id: Math.round(Math.random() * 100000),
-        x: Math.random() * parseInt(this.configKonva.width, 10),
-        y: Math.random() * parseInt(this.configKonva.height, 10),
+        x: Math.random() * parseInt(this.defaultConfigKonva.width, 10),
+        y: Math.random() * parseInt(this.defaultConfigKonva.height, 10),
         rotation: Math.random() * 180,
         scale: (Math.random() * (0.5)) + 0.5, // gets a random float between 0.5 and 1.0
         // gets a random color from the list
@@ -63,14 +75,35 @@ export default {
       });
     }
     this.list.forEach((item) => {
-      console.log(this.configKonva.width);
-      console.log(item.id);
+      // console.log(this.configKonva.width);
+      // console.log(item.id);
     });
+  },
+
+  computed: {
+    backgroundImageLayer() {
+      // console.log('backgroundImageLayer change in canvas component');
+      if (!this.backgroundImage) {
+        return null;
+      }
+      const imageURL = URL.createObjectURL(this.backgroundImage);
+      const img = new window.Image();
+      img.src = imageURL;
+      img.onload = () => {
+        this.setKonvaConfig({ width: img.width, height: img.height });
+      };
+      return img;
+    },
+  },
+  methods: {
+    setKonvaConfig(config) {
+      this.defaultConfigKonva = config;
+    },
   },
 };
 </script>
 <style scoped>
-    .canvas-border{
+    .canvass{
         border: 3px solid red;
     }
 </style>

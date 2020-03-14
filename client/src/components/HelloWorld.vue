@@ -2,22 +2,31 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <h2>Essential Links</h2>
-    <Canvass v-bind:yeet=canvDefault></Canvass>
+    <ImageUpload v-model="avatar" v-bind:backgroundImage=backgroundImage v-on:update:backgroundImage="backgroundImage = $event">
+      <div slot="activator">
+        <span>Yeet it here boi</span>
+      </div>
+    </ImageUpload>
+    <Canvass v-bind:yeet=canvDefault v-bind:backgroundImage=backgroundImage></Canvass>
   </div>
 </template>
 
 <script>
 import Canvass from './Canvass';
+import ImageUpload from './ImageUpload';
 
 export default {
   name: 'HelloWorld',
   components: {
     Canvass,
+    ImageUpload,
   },
   data() {
     return {
       msg: 'Welcome to Your Vue.js App',
-      canvDefault: 'shit bllank',
+      canvDefault: 'This just some text passed to the Canvass component',
+      avatar: null,
+      backgroundImage: null,
     };
   },
 };
