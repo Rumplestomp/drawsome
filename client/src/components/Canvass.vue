@@ -7,7 +7,7 @@
         </div> -->
         <div>
             <!-- RELOAD CONFIGKONVA (watch) BASED ON HEIGHT WIDTH  -->
-            <v-stage ref='stage' :config='defaultConfigKonva'>
+            <v-stage class="mainCanvas" ref='stage' :config='defaultConfigKonva'>
                 <!-- OPTIONAL BACKGROUND IMAGE LAYER (RESIZES CANVAS)-->
                 <v-layer ref="background-image" v-if="backgroundImage">
                   <v-image v-bind:config="{
@@ -105,5 +105,8 @@ export default {
 <style scoped>
     .canvass{
         border: 3px solid red;
+    }
+    .mainCanvas{
+      border: 3px solid teal;
     }
 </style>
