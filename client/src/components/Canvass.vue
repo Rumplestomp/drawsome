@@ -2,6 +2,10 @@
     <div class="canvass">
         <h2>This is a Canvass component</h2>
         <p>{{ yeet }}</p>
+        <div v-if="layerData.length > 0">
+          Loaded!
+          {{layerData}}
+        </div>
         <!-- <div class="canvas-border">
             <canvas id="main-canvass" v-bind:height=canvHeight v-bind:width=canvWidth></canvas>
         </div> -->
@@ -15,8 +19,27 @@
                   }">
                   </v-image>
                 </v-layer>
+                <!-- DYNAMIC LAYER RENDERING -->
+                <v-layer :key="layer.z" v-for="layer in layerData">
+                  <v-regular-polygon
+                    v-if="layer.layerType == 'RegularPolygon'"
+                    :config="{
+                      draggable: false,
+                      x: layer.x,
+                      y: layer.y,
+                      rotation: layer.rotation,
+                      scaleX: layer.scale,
+                      scaleY: layer.scale,
+                      fill: layer.fill,
+                      opacity: layer.opacity,
+                      // polygon specifics
+                      radius: layer.layerObject.radius,
+                      sides: layer.layerObject.sides
+                    }"
+                  />
+                </v-layer>
                 <!-- SINGLE TEST LAYER WITH MANY SHAPES -->
-                <v-layer ref='layer'>
+                <!-- <v-layer ref='layer'>
                   <v-regular-polygon
                     v-for="item in list"
                     :key=item.Id
@@ -34,7 +57,7 @@
                       radius: item.strokeWidth
                     }"
                   />
-                </v-layer>
+                </v-layer> -->
                 <!-- END TEST LAYER -->
             </v-stage>
         </div>
@@ -46,7 +69,12 @@ const maxSides = 7;
 const minSides = 3;
 export default {
   name: 'Canvass',
-  props: ['yeet', 'backgroundImage'],
+  // props: ['yeet', 'backgroundImage', 'layerData'],
+  props: {
+    yeet: String,
+    backgroundImage: File,
+    layerData: Array,
+  },
   data: () => ({
     // need list of graphic layers in the canvas
     list: [],
@@ -58,6 +86,10 @@ export default {
     },
   }),
 
+  created() {
+    // initial emit of config settings for parent component to grab
+    this.$emit('update:defaultConfigKonva', this.defaultConfigKonva);
+  },
   // this is all placeholder shits.
   mounted() {
     for (let i = 0; i < 20; i += 1) {
@@ -98,6 +130,7 @@ export default {
   methods: {
     setKonvaConfig(config) {
       this.defaultConfigKonva = config;
+      this.$emit('update:defaultConfigKonva', config);
     },
   },
 };
