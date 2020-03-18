@@ -1,0 +1,6 @@
+- Node.js Backend server
+  - User login like in labs/assignments
+  - File upload like in labs/assignments
+
+- k8s Deployment on GKE
+  - Try some simple deployments for practice
