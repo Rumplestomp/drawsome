@@ -1,0 +1,23 @@
+version: "3.7"
+
+networks:
+  net:
+
+volumes:
+  db-data:
+
+services:
+  backend:
+    image: drawesome/backend:latest
+    build: .
+    networks:
+      - net
+    ports:
+      - 3000:3000
+
+  mongo:
+    image: mongo:4.2.3
+    networks:
+      - net
+    volumes:
+      - db-data:/data/db
