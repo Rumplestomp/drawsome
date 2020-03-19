@@ -10,6 +10,8 @@ services:
   backend:
     image: drawesome/backend:latest
     build: .
+    depends_on:
+      - mongo
     networks:
       - net
     ports:
