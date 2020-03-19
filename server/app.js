@@ -17,22 +17,25 @@
 
 "use strict";
 
-const express = require('express');
+const express = require("express");
 const app = express();
 app.use((req, res, next) => {
     console.log("HTTP request", req.method, req.url, req.body);
     next();
 });
 
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
-const multer = require('multer');
-const path = require('path');
-const upload = multer({ dest: path.join(__dirname, 'uploads') });
+const multer = require("multer");
+const path = require("path");
+const upload = multer({ dest: path.join(__dirname, "uploads") });
 
-const MongoClient = require('mongodb').MongoClient;
+const fs = require("fs");
+
+const MongoClient = require("mongodb").MongoClient;
+const ObjectId = require("mongodb").ObjectId;
 const myurl = "mongodb://mongo:27017";
 
 // Constants
@@ -56,33 +59,27 @@ app.get("/", (req, res, next) => {
 });
 
 app.post("/api/image/", upload.single('image'), (req, res, next) => {
+    if (!req.file) return res.status(400).end("missing file");
+
     let img = fs.readFileSync(req.file.path);
     let encode_image = img.toString("base64");
     let image = new Image(req.file, encode_image);
 
+    let db = req.app.get("db");
     db.collection(IMAGE_COLLECTION).insertOne(image, (err, result) => {
-        if (err) {
-            console.log(err);
-            res.status(500).end(err);
-        } else {
-            console.log(result);
-            res.redirect("/");
-        }
+        if (err) return res.status(500).end(err);
+        res.send(result.insertedId);
     });
 });
 
 app.get("/api/image/:id/", (req, res, next) => {
     let id = req.params.id;
 
+    let db = req.app.get("db");
     db.collection(IMAGE_COLLECTION).findOne({ "_id": ObjectId(id) }, (err, result) => {
-        if (err) {
-            console.log(err);
-            res.status(500).end(err);
-        } else {
-            console.log(result);
-            res.contentType(result.contentType);
-            res.send(result.image.buffer);
-        }
+        if (err) return res.status(500).end(err);
+        res.contentType(result.contentType);
+        res.send(result.image.buffer);
     });
 });
 
@@ -92,10 +89,10 @@ const http = require('http');
 const PORT = 3000;
 
 MongoClient.connect(myurl, (err, client) => {
-    if (err) console.log(err);
-    db = client.db("drawesome");
+    if (err) return console.log(err);
+    app.set("db", client.db("drawesome"));
     http.createServer(app).listen(PORT, (err) => {
-        if (err) console.log(err);
+        if (err) return console.log(err);
         else console.log(`HTTP server on http://localhost:${PORT}`)
     });
 });

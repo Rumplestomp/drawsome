@@ -1,6 +1,9 @@
+# TODO
+
 - Node.js Backend server
   - User login like in labs/assignments
-  - File upload like in labs/assignments
+  - ~~File upload like in labs/assignments~~
+    - Make sure only images uploaded for security
 
 - k8s Deployment on GKE
   - Try some simple deployments for practice (Nginx, Traefik)
