@@ -4,6 +4,10 @@
   - ~~User auth like in labs/assignments~~
   - ~~File upload like in labs/assignments~~
     - ~~Make sure only images uploaded for security~~
+  - Signalling server
+    - https://www.tutorialspoint.com/webrtc/webrtc_signaling.htm
+    - https://saltyrtc.org/pages/getting-started.html
+    - http://engineeringsemester.com/webrtc-signaling-server-node-js/
 
 - k8s Deployment on GKE
   - Try some simple deployments for practice (Nginx, Traefik)
