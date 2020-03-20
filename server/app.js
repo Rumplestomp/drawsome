@@ -18,6 +18,8 @@
 const express = require("express");
 const app = express();
 
+const http = require('http');
+
 const bodyParser = require("body-parser");
 
 const multer = require("multer");
@@ -28,7 +30,6 @@ const fs = require("fs");
 
 const MongoClient = require("mongodb").MongoClient;
 const ObjectId = require("mongodb").ObjectId;
-const myurl = "mongodb://mongo:27017";
 
 const crypto = require("crypto");
 const cookie = require("cookie");
@@ -38,6 +39,8 @@ const ev = require("express-validator");
 
 // Constants ------------------------------------------------------------
 
+const PORT = 3000;
+const MONGO_URL = "mongodb://mongo:27017";
 const IMAGE_COLLECTION = "images";
 const USER_COLLECTION = "users";
 const COOKIE_OPTIONS = {
@@ -203,12 +206,11 @@ app.get("/signout/", (req, res, next) => {
 
 // Starting Server ------------------------------------------------------------
 
-const http = require('http');
-const PORT = 3000;
-
-MongoClient.connect(myurl, (err, client) => {
+MongoClient.connect(MONGO_URL, (err, client) => {
     if (err) return console.log(err);
+
     app.set("db", client.db("drawesome"));
+
     http.createServer(app).listen(PORT, (err) => {
         if (err) return console.log(err);
         else console.log(`HTTP server on http://localhost:${PORT}`);
