@@ -19,8 +19,6 @@ const express = require("express");
 const app = express();
 
 const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 
 const multer = require("multer");
 const path = require("path");
@@ -35,24 +33,8 @@ const myurl = "mongodb://mongo:27017";
 const crypto = require("crypto");
 const cookie = require("cookie");
 const session = require("express-session");
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true
-}));
 
-app.use((req, res, next) => {
-    req.username = (req.session.username) ? req.session.username : null;
-    console.log("HTTP request", req.username, req.method, req.url, req.body);
-    next();
-});
-
-// Middleware ------------------------------------------------------------
-
-function isAuthenticated(req, res, next) {
-    if (!req.username) return res.status(401).end("access denied");
-    next();
-}
+const ev = require("express-validator");
 
 // Constants ------------------------------------------------------------
 
@@ -60,8 +42,55 @@ const IMAGE_COLLECTION = "images";
 const USER_COLLECTION = "users";
 const COOKIE_OPTIONS = {
     path: "/",
-    maxAge: 60 * 60 * 24 * 7 // 1 week in seconds
+    maxAge: 60 * 60 * 24 * 7, // 1 week in seconds
+    httpOnly: false,
+    secure: true,
+    sameSite: true
 };
+
+// Middleware ------------------------------------------------------------
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        secure: true,
+        sameSite: true
+    }
+}));
+
+app.use((req, res, next) => {
+    let username = (req.session.username) ? req.session.username : "";
+    res.setHeader("Set-Cookie", cookie.serialize("username", username, COOKIE_OPTIONS));
+    next();
+});
+
+app.use((req, res, next) => {
+    console.log("HTTP request", req.method, req.url, req.body);
+    next();
+});
+
+// Helpers ------------------------------------------------------------
+
+function isAuthenticated(req, res, next) {
+    if (!req.session.username) return res.status(401).end("access denied");
+    next();
+}
+
+function generateSalt() {
+    return crypto.randomBytes(16).toString("base64");
+}
+
+function generateSaltedHash(password, salt) {
+    let hash = crypto.createHmac("sha512", salt);
+    hash.update(password);
+    return hash.digest("base64");
+}
 
 // Classes ------------------------------------------------------------
 
@@ -118,7 +147,10 @@ app.get("/api/image/:id/", [
     });
 });
 
-app.post("/signup/", (req, res, next) => {
+app.post("/signup/", [
+    ev.body("username").notEmpty().escape(),
+    ev.body("password").notEmpty()
+], (req, res, next) => {
     let username = req.body.username;
     let password = req.body.password;
 
@@ -127,10 +159,8 @@ app.post("/signup/", (req, res, next) => {
         if (err) return res.status(500).end(err);
         if (result) return res.status(409).end(`username ${username} already exists`);
 
-        let salt = crypto.randomBytes(16).toString("base64");
-        let hash = crypto.createHmac("sha512", salt);
-        hash.update(password);
-        let saltedHash = hash.digest("base64");
+        let salt = generateSalt();
+        let saltedHash = generateSaltedHash(password, salt);
 
         let user = new User(username, salt, saltedHash);
         db.collection(USER_COLLECTION).insertOne(user, (err, result) => {
@@ -143,7 +173,10 @@ app.post("/signup/", (req, res, next) => {
     });
 });
 
-app.post("/signin/", (req, res, next) => {
+app.post("/signin/", [
+    ev.body("username").notEmpty().escape(),
+    ev.body("password").notEmpty()
+], (req, res, next) => {
     let username = req.body.username;
     let password = req.body.password;
 
@@ -153,9 +186,7 @@ app.post("/signin/", (req, res, next) => {
         if (!result) return res.status(401).end("access denied");
 
         let salt = result.salt;
-        let hash = crypto.createHmac("sha512", salt);
-        hash.update(password);
-        let saltedHash = hash.digest("base64");
+        let saltedHash = generateSaltedHash(password, salt);
         if (saltedHash !== result.saltedHash) return res.status(401).end("access denied");
 
         res.setHeader("set-Cookie", cookie.serialize("username", username, COOKIE_OPTIONS));
@@ -165,8 +196,8 @@ app.post("/signin/", (req, res, next) => {
 });
 
 app.get("/signout/", (req, res, next) => {
+    req.session.destroy();
     res.setHeader("Set-Cookie", cookie.serialize("username", "", COOKIE_OPTIONS));
-    req.session.username = "";
     res.redirect("/");
 });
 

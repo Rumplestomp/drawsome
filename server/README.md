@@ -1,7 +1,7 @@
 # TODO
 
 - Node.js Backend Server
-  - User auth like in labs/assignments
+  - ~~User auth like in labs/assignments~~
   - ~~File upload like in labs/assignments~~
     - Make sure only images uploaded for security
 

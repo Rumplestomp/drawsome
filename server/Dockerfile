@@ -1,4 +1,4 @@
-FROM node:12.14.1
+FROM node:13.10.1
 
 WORKDIR /usr/src/app
 
@@ -9,4 +9,4 @@ RUN npm install
 COPY *.js ./
 
 EXPOSE 3000
-CMD [ "node", "app.js" ]
+CMD [ "npm", "run", "prod" ]
