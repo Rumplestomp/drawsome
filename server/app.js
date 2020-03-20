@@ -2,9 +2,9 @@
 
 // Course Work
 // lab5 - Storing Data
-// hw3 - Building the backend
+// hw3 - Building the Backend
 // lab6 - User Authentication
-// hw3 - Managing users and Security
+// hw3 - Managing Users and Security
 // lab7 - Web Security
 
 // MongoDB
@@ -12,6 +12,9 @@
 
 // Image upload with Multer and MongoDB
 // https://code.tutsplus.com/tutorials/file-upload-with-multer-in-node--cms-32088
+
+// Image upload file filter for Multer
+// https://stackoverflow.com/a/38692588
 
 // App Setup ------------------------------------------------------------
 
@@ -24,7 +27,16 @@ const bodyParser = require("body-parser");
 
 const multer = require("multer");
 const path = require("path");
-const upload = multer({ dest: path.join(__dirname, "uploads") });
+const upload = multer({
+    dest: path.join(__dirname, "uploads"),
+    fileFilter: (req, file, callback) => {
+        let ext = path.extname(file.originalname);
+        if (ext !== ".png" && ext !== ".jpg" && ext !== ".jpeg") {
+            return callback(new Error("not an image"))
+        }
+        callback(null, true)
+    }
+});
 
 const fs = require("fs");
 
