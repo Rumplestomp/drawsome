@@ -2,10 +2,6 @@
     <div class="canvass">
         <h2>This is a Canvass component</h2>
         <p>{{ yeet }}</p>
-        <div v-if="layerData.length > 0">
-          Loaded!
-          {{layerData}}
-        </div>
         <!-- <div class="canvas-border">
             <canvas id="main-canvass" v-bind:height=canvHeight v-bind:width=canvWidth></canvas>
         </div> -->
@@ -20,11 +16,14 @@
                   </v-image>
                 </v-layer>
                 <!-- DYNAMIC LAYER RENDERING -->
+
                 <v-layer :key="layer.z" v-for="layer in layerData">
                   <v-regular-polygon
                     v-if="layer.layerType == 'RegularPolygon'"
+                    @dragstart="handleDragStart(layer)"
+                    @dragend="handleDragEnd(layer)"
                     :config="{
-                      draggable: false,
+                      draggable: true,
                       x: layer.x,
                       y: layer.y,
                       rotation: layer.rotation,
@@ -37,36 +36,29 @@
                       sides: layer.layerObject.sides
                     }"
                   />
-                </v-layer>
-                <!-- SINGLE TEST LAYER WITH MANY SHAPES -->
-                <!-- <v-layer ref='layer'>
-                  <v-regular-polygon
-                    v-for="item in list"
-                    :key=item.Id
+                  <v-text
+                    v-if="layer.layerType == 'Text'"
+                    @dragstart="handleDragStart(layer)"
+                    @dragend="handleDragEnd(layer)"
                     :config="{
-                      x: item.x,
-                      y: item.y,
-                      rotation: item.rotation,
-                      scaleX: item.scale,
-                      scaleY: item.scale,
-                      sides: item.sides,
-                      stroke: item.stroke,
-                      strokeWidth: item.strokeWidth,
-                      draggable: false,
-                      opacity: 0.75,
-                      radius: item.strokeWidth
+                      draggable: true,
+                      x: layer.x,
+                      y: layer.y,
+                      rotation: layer.rotation,
+                      scaleX: layer.scale,
+                      scaleY: layer.scale,
+                      fill: layer.fill,
+                      opacity: layer.opacity,
+                      // text specifics
+                      text: layer.layerObject.text
                     }"
                   />
-                </v-layer> -->
-                <!-- END TEST LAYER -->
+                </v-layer>
             </v-stage>
         </div>
     </div>
 </template>
 <script>
-const colours = ['red', 'blue', 'teal', 'gold', 'grey', 'purple']; // temp shit
-const maxSides = 7;
-const minSides = 3;
 export default {
   name: 'Canvass',
   // props: ['yeet', 'backgroundImage', 'layerData'],
@@ -78,12 +70,12 @@ export default {
   data: () => ({
     // need list of graphic layers in the canvas
     list: [],
-    // dragItemId: null
     // default height and width
     defaultConfigKonva: {
       width: 1280,
       height: 720,
     },
+    curDraggingLayer: { offsetX: 0, offsetY: 0 },
   }),
 
   created() {
@@ -92,24 +84,7 @@ export default {
   },
   // this is all placeholder shits.
   mounted() {
-    for (let i = 0; i < 20; i += 1) {
-      this.list.push({
-        id: Math.round(Math.random() * 100000),
-        x: Math.random() * parseInt(this.defaultConfigKonva.width, 10),
-        y: Math.random() * parseInt(this.defaultConfigKonva.height, 10),
-        rotation: Math.random() * 180,
-        scale: (Math.random() * (0.5)) + 0.5, // gets a random float between 0.5 and 1.0
-        // gets a random color from the list
-        stroke: colours[Math.round(Math.random() * colours.length)],
-        strokeWidth: 35,
-        // gets a random number of sides for the shape
-        sides: Math.round((Math.random() * (maxSides - minSides)) + minSides),
-      });
-    }
-    this.list.forEach((item) => {
-      // console.log(this.configKonva.width);
-      // console.log(item.id);
-    });
+
   },
 
   computed: {
@@ -132,14 +107,27 @@ export default {
       this.defaultConfigKonva = config;
       this.$emit('update:defaultConfigKonva', config);
     },
+    handleDragStart(layer) {
+      // GET the position on the layer that the mouse grabs
+      const mousePos = this.$refs.stage.getNode().getPointerPosition();
+      this.curDraggingLayer.offsetX = layer.x - parseInt(mousePos.x, 10);
+      this.curDraggingLayer.offsetY = layer.y - parseInt(mousePos.y, 10);
+    },
+    handleDragEnd(layer) {
+      const mousePos = this.$refs.stage.getNode().getPointerPosition();
+      this.$set(layer, 'x', parseInt(mousePos.x, 10) + this.curDraggingLayer.offsetX);
+      this.$set(layer, 'y', parseInt(mousePos.y, 10) + this.curDraggingLayer.offsetY);
+    },
   },
 };
 </script>
 <style scoped>
     .canvass{
-        border: 3px solid red;
+        border: 3px solid rgba(250,158,58, 0.5);
+        overflow:scroll;
     }
-    .mainCanvas{
+    .wrapper{
       border: 3px solid teal;
+      margin: 3px;
     }
 </style>

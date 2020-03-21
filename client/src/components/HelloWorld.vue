@@ -1,30 +1,78 @@
 <template>
   <div class="hello">
-    <mdbContainer>
-      <h1>Drawesome</h1>
-      <ImageUpload
+    <Navbar/>
+    <mdbContainer class="mb-5">
+      <!-- <h1>Drawesome</h1> -->
+      <!-- <ImageUpload
         :backgroundImage=backgroundImage
         v-on:update:backgroundImage="backgroundImage = $event"
       >
         <div slot="activator">
-          <button>Yeet it here boi</button>
+          <mdbBtn>Set Background Image</mdbBtn>
         </div>
-      </ImageUpload>
+      </ImageUpload> -->
     </mdbContainer>
 
-    <mdbContainer>
-      <mdbRow>
-        <mdbCol col=10>
-          <Canvass
-            :yeet=canvDefault
-            :backgroundImage=backgroundImage
-            :layerData=layerData
-            v-on:update:defaultConfigKonva="canvasConfig = $event"
-          />
+    <mdbContainer fluid>
+      <mdbRow class="justify-content-around">
+        <mdbCol col=9>
+          <mdbRow class="mb-2">
+            <mdbCol md=3>
+            <ImageUpload
+              :backgroundImage=backgroundImage
+              v-on:update:backgroundImage="backgroundImage = $event"
+            >
+              <div slot="activator">
+                <mdbBtn>Set Background Image</mdbBtn>
+              </div>
+            </ImageUpload>
+            </mdbCol>
+
+            <mdbCol offsetMd=4 md=3>
+            <mdbBtn v-on:click="downloadCanvasImage('canvasImage.png')">Download Image</mdbBtn>
+            </mdbCol>
+
+            <mdbCol md=2>
+            <!-- TODO: IMPLEMENT BTN FUNCTIONALITY -->
+            <!-- <mdbBtn >Collaborate</mdbBtn> -->
+
+            <!--  -->
+            <!-- <mdb-container> -->
+              <mdb-btn color="default" @click.native="collaborate=true">Collaborate</mdb-btn>
+              <mdb-modal :show="collaborate" @close="collaborate = false">
+                <mdb-modal-header class="text-center">
+                  <mdb-modal-title tag="h4" bold class="w-100">Collaboration</mdb-modal-title>
+                </mdb-modal-header>
+                <mdb-modal-body class="mx-3 grey-text">
+                  <mdb-btn color="" @click="peerHost">Start Session</mdb-btn>
+                  <p v-if="collabCode">Your Collab code: {{collabCode}}</p>
+                  <mdb-input label="Collab Code" icon="lock" type="text"/>
+                </mdb-modal-body>
+              </mdb-modal>
+            <!-- </mdb-container> -->
+            <!--  -->
+
+            </mdbCol>
+
+          </mdbRow>
+          <mdbCard>
+            <Canvass
+              ref="canvass"
+              :yeet=canvDefault
+              :backgroundImage=backgroundImage
+              :layerData=layerData
+              v-on:update:defaultConfigKonva="canvasConfig = $event"
+            />
+          </mdbCard>
         </mdbCol>
         <!-- ADD SIDEBAR COMPONENT FOR VIEWING LAYERS -->
         <mdbCol col=2>
-          <LayerSideBar :layerData=layerData :canvasConfig="canvasConfig">LOL</LayerSideBar>
+          <LayerInputForm v-on:submit:newLayer="pushLayer($event)"></LayerInputForm>
+          <div class="pb-3"/>
+          <LayerSideBar
+            :layerData=layerData
+            :canvasConfig="canvasConfig"
+          />
         </mdbCol>
       </mdbRow>
     </mdbContainer>
@@ -33,16 +81,27 @@
 </template>
 
 <script>
+// UTILITY IMPORTS //
+import Peer from 'simple-peer';
 // MDB STYLING IMPORTS //
 import mdbContainer from 'mdbvue/lib/components/mdbContainer';
 import mdbRow from 'mdbvue/lib/components/mdbRow';
 import mdbBtn from 'mdbvue/lib/components/mdbBtn';
 import mdbCol from 'mdbvue/lib/components/mdbCol';
+import mdbIcon from 'mdbvue/lib/components/mdbIcon';
+import mdbInput from 'mdbvue/lib/components/mdbInput';
+import mdbCard from 'mdbvue/lib/components/mdbCard';
+import mdbModal from 'mdbvue/lib/components/mdbModal';
+import mdbModalBody from 'mdbvue/lib/components/mdbModalBody';
+import mdbModalHeader from 'mdbvue/lib/components/mdbModalHeader';
+import mdbModalTitle from 'mdbvue/lib/components/mdbModalTitle';
 // LOCAL IMPORTS //
 import Canvass from './Canvass';
 import ImageUpload from './ImageUpload';
 import LayerSideBar from './sidebar/LayerSideBar';
 import CanvasLayer from '../models/layer';
+import LayerInputForm from './LayerInputForm';
+import Navbar from './Navbar';
 
 export default {
   name: 'HelloWorld',
@@ -51,18 +110,31 @@ export default {
     Canvass,
     ImageUpload,
     LayerSideBar,
+    LayerInputForm,
+    Navbar,
     // MDB STYLING COMPONENTS
     mdbContainer,
     mdbRow,
     mdbBtn,
     mdbCol,
+    mdbIcon,
+    mdbCard,
+    mdbInput,
+    mdbModal,
+    mdbModalBody,
+    mdbModalHeader,
+    mdbModalTitle,
   },
   data() {
     return {
       canvDefault: 'This just some text passed to the Canvass component',
-      backgroundImage: null, // HARDCODE-ish, remove!
+      backgroundImage: null, // will become a file object!
       layerData: [],
       canvasConfig: null,
+      topLayerNum: 0,
+      collaborate: false, // used for modal activation
+      collabCode: null,
+      selfPeer: null,
     };
   },
   created() {
@@ -74,7 +146,7 @@ export default {
       y: 50,
     });
     x.createRegularPolygon();
-    this.layerData.push(x);
+    this.pushLayer(x);
     let x2 = new CanvasLayer({
       isBackground: true,
       fill: 'blue',
@@ -82,7 +154,42 @@ export default {
       y: 500,
     });
     x2.createRegularPolygon();
-    this.layerData.push(x2);
+    this.pushLayer(x2);
+  },
+  methods: {
+    pushLayer(layer) {
+      layer.setZ(this.topLayerNum);
+      this.topLayerNum += 1;
+      this.layerData.push(layer);
+    },
+    removeLayer() {
+      // TODO: IMPLEMENT
+    },
+    // method to save canvas image
+    downloadCanvasImage(name = 'canvasImage.png') {
+      const link = document.createElement('a');
+      const canvass = this.$refs.canvass;
+      const stage = canvass.$refs.stage;
+
+      link.download = name;
+      // stage method to export data to URL
+      link.href = stage.getNode().toDataURL();
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    peerHost() {
+      this.selfPeer = new Peer({ objectMode: true });
+      // upon new connections to the host, we send the entire layerData for initialization on the client
+      this.selfPeer.on('connect', () => {
+        this.selfPeer.send(JSON.stringify(this.layerData));
+      });
+      this.selfPeer.on('')
+      console.log(Peer.WEBRTC_SUPPORT);
+    },
+    peerJoin() {
+
+    },
   },
 };
 </script>
@@ -102,5 +209,9 @@ li {
 }
 a {
   color: #42b983;
+}
+.hello{
+  background-color: rgb(244,244,244);
+  height: 100vh;
 }
 </style>

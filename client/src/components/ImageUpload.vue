@@ -17,7 +17,7 @@
         <p class="subheading">{{errorText}}</p>
         <div>
             <div></div>
-          <button @click="errorDialog = false" flat>Got it!</button>
+          <mdbBtn @click="errorDialog = false" flat>Got it!</mdbBtn>
         </div>
       </div>
     </div>
@@ -25,8 +25,14 @@
 </template>
 
 <script>
+// MDB STYLING IMPORTS
+import mdbBtn from 'mdbvue/lib/components/mdbBtn';
+
 export default {
   name: 'ImageUpload',
+  components: {
+    mdbBtn,
+  },
   data: () => ({
     errorDialog: null,
     errorText: '',

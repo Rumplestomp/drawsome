@@ -4,7 +4,6 @@ import Text from './Text';
 export default class CanvasLayer {
   constructor({ fill = 'black', x = 0, y = 0, z = 0, rotation = 0, opacity = 1, scale = 1 } = {}) {
     /** GENERAL DATA */
-    this.layerType = null;
     // isBackground: bool   REQUIRED A boolean saying whether or not this is the background layer
     this.isBackground = false;
     // fill: str            The color of the of layer object (Shapes and text)
@@ -22,18 +21,25 @@ export default class CanvasLayer {
     // scale: float         The scale (size) of the shape relative to its original size
     this.scale = scale;
 
+    // layerObject: object  The object that contains the specific data relating to the particular type of layer
     this.layerObject = null;
+    // layerType: str       The type of layer (set when layerObject is set)
+    this.layerType = null;
   }
   // TODO: ADD VALIDATION? OK.
-  /** Function for adding polygon data to the layer */
+  /** Function for adding polygon data to the layerObject */
   createRegularPolygon(data) {
     const shape = new RegularPolygon(data);
     this.layerObject = shape;
     this.layerType = shape.layerType;
   }
+  /** Function for adding polygon data to the layerObject */
   createText(data) {
     const shape = new Text(data);
     this.layerObject = shape;
     this.layerType = shape.layerType;
+  }
+  setZ(layerNum) {
+    this.z = layerNum;
   }
 }
