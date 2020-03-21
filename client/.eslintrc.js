@@ -25,10 +25,11 @@ module.exports = {
   },
   // add your custom rules here
   rules: {
+    'max-len': 0,
     // don't require .vue extension when importing
     'import/extensions': ['error', 'always', {
       js: 'never',
-      vue: 'never'
+      vue: 'never',
     }],
     // disallow reassignment of function parameters
     // disallow parameter object manipulation except for specific exclusions
@@ -47,4 +48,4 @@ module.exports = {
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   }
-}
+};
