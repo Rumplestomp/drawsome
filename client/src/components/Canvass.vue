@@ -1,5 +1,5 @@
 <template>
-    <div class="canvass">
+    <div class="canvass pb-2 px-2">
         <h2>This is a Canvass component</h2>
         <p>{{ yeet }}</p>
         <!-- <div class="canvas-border">
@@ -7,7 +7,12 @@
         </div> -->
         <div>
             <!-- RELOAD CONFIGKONVA (watch) BASED ON HEIGHT WIDTH  -->
-            <v-stage class="mainCanvas" ref='stage' :config='defaultConfigKonva'>
+            <v-stage
+              class="mainCanvas"
+              ref='stage'
+              :config='defaultConfigKonva'
+              :style="{ width: this.defaultConfigKonva.width+1+'px', height: this.defaultConfigKonva.height+1+'px' }"
+            >
                 <!-- OPTIONAL BACKGROUND IMAGE LAYER (RESIZES CANVAS)-->
                 <v-layer ref="background-image" v-if="backgroundImage">
                   <v-image v-bind:config="{
@@ -61,7 +66,6 @@
 <script>
 export default {
   name: 'Canvass',
-  // props: ['yeet', 'backgroundImage', 'layerData'],
   props: {
     yeet: String,
     backgroundImage: File,
@@ -99,6 +103,7 @@ export default {
       img.onload = () => {
         this.setKonvaConfig({ width: img.width, height: img.height });
       };
+      // TODO: move all existing layers to within new canvas
       return img;
     },
   },
@@ -129,5 +134,9 @@ export default {
     .wrapper{
       border: 3px solid teal;
       margin: 3px;
+    }
+    .mainCanvas{
+      /* border: solid teal 1px; */
+      box-shadow: 0px 0px 5px 2px #999999;
     }
 </style>

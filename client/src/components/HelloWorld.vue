@@ -38,8 +38,9 @@
 
             <!--  -->
             <!-- <mdb-container> -->
-              <mdb-btn color="default" @click.native="collaborate=true">Collaborate</mdb-btn>
-              <mdb-modal :show="collaborate" @close="collaborate = false">
+              <mdb-btn color="default" @click.native="collaborateModal=true">Collaborate</mdb-btn>
+              <!-- Modal for collaboration button -->
+              <mdb-modal :show="collaborateModal" @close="collaborateModal = false">
                 <mdb-modal-header class="text-center">
                   <mdb-modal-title tag="h4" bold class="w-100">Collaboration</mdb-modal-title>
                 </mdb-modal-header>
@@ -50,7 +51,6 @@
                 </mdb-modal-body>
               </mdb-modal>
             <!-- </mdb-container> -->
-            <!--  -->
 
             </mdbCol>
 
@@ -65,8 +65,8 @@
             />
           </mdbCard>
         </mdbCol>
-        <!-- ADD SIDEBAR COMPONENT FOR VIEWING LAYERS -->
-        <mdbCol col=2>
+        <!-- LAYER INPUT MENU + SIDEBAR COMPONENT FOR VIEWING LAYERS -->
+        <mdbCol col="3" class="pl-5">
           <LayerInputForm v-on:submit:newLayer="pushLayer($event)"></LayerInputForm>
           <div class="pb-3"/>
           <LayerSideBar
@@ -99,7 +99,6 @@ import mdbModalTitle from 'mdbvue/lib/components/mdbModalTitle';
 import Canvass from './Canvass';
 import ImageUpload from './ImageUpload';
 import LayerSideBar from './sidebar/LayerSideBar';
-import CanvasLayer from '../models/layer';
 import LayerInputForm from './LayerInputForm';
 import Navbar from './Navbar';
 
@@ -132,29 +131,13 @@ export default {
       layerData: [],
       canvasConfig: null,
       topLayerNum: 0,
-      collaborate: false, // used for modal activation
+      collaborateModal: false, // used for modal activation
       collabCode: null,
       selfPeer: null,
     };
   },
   created() {
-    /** HARDCODE TESTING STUFF */
-    let x = new CanvasLayer({
-      isBackground: true,
-      fill: 'red',
-      x: 50,
-      y: 50,
-    });
-    x.createRegularPolygon();
-    this.pushLayer(x);
-    let x2 = new CanvasLayer({
-      isBackground: true,
-      fill: 'blue',
-      x: 500,
-      y: 500,
-    });
-    x2.createRegularPolygon();
-    this.pushLayer(x2);
+
   },
   methods: {
     pushLayer(layer) {
@@ -162,9 +145,8 @@ export default {
       this.topLayerNum += 1;
       this.layerData.push(layer);
     },
-    removeLayer() {
-      // TODO: IMPLEMENT
-    },
+    // removing layers is handled in the LayerSideBar component
+
     // method to save canvas image
     downloadCanvasImage(name = 'canvasImage.png') {
       const link = document.createElement('a');

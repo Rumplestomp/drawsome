@@ -10,35 +10,68 @@
       </mdbNavbar-nav>
       <!-- ADD SIGNIN HERE -->
       <mdbDropdown tag="li" class="nav-item">
-          <mdbDropdownToggle tag="a" navLink slot="toggle" waves-fixed>Sign in</mdbDropdownToggle>
-          <form>
+          <mdbDropdownToggle tag="a" navLink slot="toggle" waves-fixed>Profile</mdbDropdownToggle>
+          <!-- <form>
             <mdbInput type="text" class="text-white" placeholder="Search" aria-label="Search" label navInput/>
-          </form>
-          <!-- <mdbDropdownMenu>
-            <mdbDropdownItem>Action</mdbDropdownItem>
-            <mdbDropdownItem>Another action</mdbDropdownItem>
-            <mdbDropdownItem>Something else here</mdbDropdownItem>
-          </mdbDropdownMenu> -->
+          </form> -->
+          <mdbDropdownMenu right>
+            <mdbDropdownItem @click.native="authenticateModal=true">Sign In</mdbDropdownItem>
+            <div class="dropdown-divider"></div>
+            <mdbDropdownItem>Register</mdbDropdownItem>
+          </mdbDropdownMenu>
       </mdbDropdown>
     </mdbNavbar-toggler>
+    <!-- Modal for sign in -->
+            <mdb-modal :show="authenticateModal" @close="authenticateModal = false">
+                <mdb-modal-header class="text-center">
+                  <mdb-modal-title tag="h4" bold class="w-100">Sign in</mdb-modal-title>
+                </mdb-modal-header>
+                <mdb-modal-body class="mx-3 grey-text">
+                  <!-- <mdb-btn color="" @click="peerHost">Start Session</mdb-btn>
+                  <p v-if="collabCode">Your Collab code: {{collabCode}}</p>
+                  <mdb-input label="Collab Code" icon="lock" type="text"/> -->
+                  <mdb-input type="text" label="Username"/>
+                  <mdb-input type="password" label="Password"/>
+                  <div class="text-center">
+                    <mdb-btn type="submit">Sign In</mdb-btn>
+                  </div>
+                </mdb-modal-body>
+              </mdb-modal>
   </mdbNavbar>
 </template>
 <script>
-import { mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbDropdownItem } from 'mdbvue';
+import { mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem, mdbDropdown, mdbDropdownMenu, mdbDropdownToggle, mdbInput, mdbBtn, mdbDropdownItem } from 'mdbvue';
+import mdbModal from 'mdbvue/lib/components/mdbModal';
+import mdbModalBody from 'mdbvue/lib/components/mdbModalBody';
+import mdbModalHeader from 'mdbvue/lib/components/mdbModalHeader';
+import mdbModalTitle from 'mdbvue/lib/components/mdbModalTitle';
 
 export default {
   name: 'Navbar',
   components: {
+    mdbInput,
+    mdbBtn,
+    // NAVBAR
     mdbNavbar,
     mdbNavbarBrand,
     mdbNavbarToggler,
     mdbNavbarNav,
     mdbNavItem,
+    // DROPDOWNS
     mdbDropdown,
     mdbDropdownMenu,
     mdbDropdownToggle,
-    mdbInput,
     mdbDropdownItem,
+    // MODALS
+    mdbModal,
+    mdbModalHeader,
+    mdbModalBody,
+    mdbModalTitle,
+  },
+  data() {
+    return {
+      authenticateModal: false,
+    };
   },
 };
 </script>
