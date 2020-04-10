@@ -26,6 +26,7 @@ module.exports = {
   // add your custom rules here
   rules: {
     'max-len': 0,
+    'consistent-return': 0,
     // don't require .vue extension when importing
     'import/extensions': ['error', 'always', {
       js: 'never',
