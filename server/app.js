@@ -49,6 +49,9 @@ const session = require("express-session");
 
 const ev = require("express-validator");
 
+const socket = require("socket.io");
+const signal = require("simple-signal-server");
+
 // Constants ------------------------------------------------------------
 
 const PORT = 3000;
@@ -216,6 +219,29 @@ app.get("/signout/", (req, res, next) => {
     res.redirect("/");
 });
 
+// HTTP and Signalling Server Setup ------------------------------------------------------------
+
+const server = http.createServer(app);
+
+const io = socket(server);
+const signalServer = signal(io);
+const allIDs = new Set();
+
+signalServer.on("discover", (request) => {
+    const clientID = request.socket.id;
+    allIDs.add(clientID);
+    request.discover(clientID, Array.from(allIDs));
+});
+
+signalServer.on("disconnect", (socket) => {
+    const clientID = socket.id;
+    allIDs.delete(clientID);
+});
+
+signalServer.on("request", (request) => {
+    request.forward();
+});
+
 // Starting Server ------------------------------------------------------------
 
 MongoClient.connect(MONGO_URL, (err, client) => {
@@ -223,8 +249,8 @@ MongoClient.connect(MONGO_URL, (err, client) => {
 
     app.set("db", client.db("drawesome"));
 
-    http.createServer(app).listen(PORT, (err) => {
+    server.listen(PORT, (err) => {
         if (err) return console.log(err);
-        else console.log(`HTTP server on http://localhost:${PORT}`);
+        else console.log(`HTTP and signalling server on http://localhost:${PORT}`);
     });
 });

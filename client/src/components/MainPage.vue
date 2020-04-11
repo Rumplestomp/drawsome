@@ -130,7 +130,7 @@ export default {
       collaborateModal: false, // used for modal activation
       // WEBSOCKET + WEBRTC //
       collabCode: null,
-      selfPeer: null, //      will be the simple-peer object used for webRTC communication
+      connectedPeer: null, //      will be the simple-peer object used for webRTC communication
       signalClient: null, //  will be the client for the signaling server, used to set up webRTC connection
     };
   },
@@ -162,12 +162,12 @@ export default {
       // Either give user random unique code, or use their username as the id to send to the signaling server
       await this.connectSignalingServer();
       // upon new connections to the host, we send the entire layerData for initialization on the client
-      if (!this.selfPeer) {
-        this.selfPeer.on('connect', () => {
-          this.selfPeer.send(JSON.stringify(this.layerData));
+      if (!this.connectedPeer) {
+        this.connectedPeer.on('connect', () => {
+          this.connectedPeer.send(JSON.stringify(this.layerData));
         });
       }
-      // this.selfPeer.on('')
+      // this.connectedPeer.on('')
       // console.log(Peer.WEBRTC_SUPPORT);
     },
     peerJoin() {
@@ -180,11 +180,11 @@ export default {
         // the action to take when discovered by signaling server
         this.signalClient.on('discover', async (allIds) => { // depends on wtfs going on
           const id = allIds[0];
-          this.selfPeer = await this.signalClient.connect(id);
+          this.connectedPeer = await this.signalClient.connect(id);
         });
         // the action to take when a request to from someone else to join you occurs
         this.signalClient.on('request', async (request) => { // depends on wtfs going on
-          this.selfPeer = await request.accept();
+          this.connectedPeer = await request.accept();
         });
       }
     },
