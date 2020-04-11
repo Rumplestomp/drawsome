@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.3"
 
 # Build: docker-compose -f swarm.yml build
 # Up:    docker stack deploy -c swarm.yml drawsome
