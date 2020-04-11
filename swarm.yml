@@ -7,6 +7,8 @@ version: "3.3"
 #        docker service logs drawsome_<frontend|backend|mongodb>
 # Down:  docker stack rm drawsome
 
+# https://github.com/docker/awesome-compose/blob/master/traefik-golang/docker-compose.yml
+
 networks:
   net:
 
