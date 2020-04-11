@@ -4,7 +4,7 @@ networks:
   net:
 
 volumes:
-  db-data:
+  mongodb-data:
 
 services:
   frontend:
@@ -32,6 +32,6 @@ services:
     networks:
       - net
     volumes:
-      - db-data:/data/db
+      - mongodb-data:/data/db
     deploy:
       replicas: 1
