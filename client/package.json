@@ -8,6 +8,7 @@
     "build": "node build/build.js",
     "lint": "eslint --ext .js,.vue src",
     "dev": "webpack-dev-server --inline --progress --hot --config build/webpack.dev.conf.js",
+    "docker": "webpack-dev-server --inline --progress --hot --config build/webpack.docker.conf.js",
     "start": "vue-cli-service serve --open"
   },
   "dependencies": {
