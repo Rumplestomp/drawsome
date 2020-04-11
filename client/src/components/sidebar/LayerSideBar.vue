@@ -8,7 +8,7 @@
             <SideBarItem
               v-on:delete:layer="handleDeleteLayer($event)"
               v-on:change:layer="handleLiftLayer($event)"
-              v-on:update:layer="handleLiftLayer($event)"
+              v-on:update:layer="handleUpdateLayer($event)"
               :layerItem="layer"
               :canvasConfig="canvasConfig"
               >

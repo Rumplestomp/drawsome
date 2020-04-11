@@ -59,9 +59,10 @@
         <mdbCol col="3" class="pl-5">
           <LayerInputForm v-on:submit:newLayer="pushLayer($event)"></LayerInputForm>
           <div class="pb-3"/>
+          <!-- The LayerSideBar component has many controls for manipulating the layerData -->
           <LayerSideBar
-            v-on:update:layer="handleUpdateLayer($event)"
-            v-on:delete:layer="handleDeleteLayer($event)"
+            v-on:update:layer="transmitUpdateLayer($event)"
+            v-on:delete:layer="transmitDeleteLayer($event)"
             :layerData=layerData
             :canvasConfig="canvasConfig"
           />
@@ -131,7 +132,7 @@ export default {
       collaborateModal: false, // used for modal activation
       // WEBSOCKET + WEBRTC //
       hosting: false,
-      collabCode: null,
+      collabCode: '',
       joinCode: '',
       signalClient: null, //  will be the client for the signaling server, used to set up webRTC connection
       allIds: [],
@@ -169,14 +170,16 @@ export default {
       // console.log(this.connectedPeer.WEBRTC_SUPPORT);
     },
     async peerJoin(id) {
-      this.connectSignalingServer();
-      await this.signalClient.connect(id);
+      await this.connectSignalingServer();
+      const { peer } = await this.signalClient.connect(id);
+      this.peerInit(peer, false);
     },
     // as a host, this code initializes the peer who is connecting to you
-    peerInit(peer, host=true) {
+    peerInit(peer, host = true) {
       if (host) {
         peer.on('connect', () => {
           // send layer data to peer
+          console.log('peer connected!!');
           peer.send(JSON.stringify(this.layerData));
         });
       }
@@ -195,36 +198,42 @@ export default {
      * Note that this.signalClient.peers is an array of all connected peers
      */
     connectSignalingServer() {
-      if (!this.signalClient) {
-        const socket = io('127.0.0.1:3000');
-        // const socket = io(`${process.env.HOST}:3000`);
-        this.signalClient = new SimpleSignalClient(socket);
-        console.log('signalClient.id (before discovery):', this.signalClient.id);
-        // the action to take when discovered by signaling server
-        this.signalClient.on('discover', async (allIds) => { // depends on wtfs going on
-          console.log('client discovery');
-          console.log('signalClient.id (after discovery):', this.signalClient.id);
-          this.collabCode = this.signalClient.id;
-          console.log(JSON.parse(JSON.stringify(allIds)));
-          this.allIds = allIds;
-        });
-        // the action to take when a request to from someone else to join you occurs
-        this.signalClient.on('request', async (request) => {
-          const { peer } = await request.accept();
-          // initialize this peer
-          this.peerInit(peer);
-        });
-        if (this.signalClient) {
-          this.signalClient.discover();
-        }
-      } // end if
+      return new Promise((resolve, reject) => {
+        if (!this.signalClient) {
+          const socket = io('127.0.0.1:3000');
+          // const socket = io(`${process.env.HOST}:3000`);
+
+          this.signalClient = new SimpleSignalClient(socket);
+          // the action to take when discovered by signaling server
+          this.signalClient.on('discover', async (allIds) => { // depends on wtfs going on
+            console.log('signalClient.id (after discovery):', this.signalClient.id);
+            this.collabCode = this.signalClient.id;
+            console.log(JSON.parse(JSON.stringify(allIds)));
+            this.allIds = allIds;
+            // resolve promise once signaling server has discovered client
+            resolve();
+          });
+
+          // the action to take when a request to from someone else to join you occurs
+          this.signalClient.on('request', async (request) => {
+            const { peer } = await request.accept();
+            // initialize this peer
+            this.peerInit(peer);
+          });
+          if (this.signalClient) {
+            this.signalClient.discover();
+          } else {
+            reject();
+          }
+        } // end if
+      });
     },
     /**
      * Handler used to transmit specific updated layer data.
      */
-    handleUpdateLayer(layer) {
+    transmitUpdateLayer(layer) {
       if (this.signalClient) {
-        this.signalClient.peers.forEach((peer) => {
+        this.signalClient.peers().forEach((peer) => {
           peer.send(layer);
         });
       }
@@ -232,26 +241,35 @@ export default {
     /**
      * Handler to delete layer based on RTC peer signals
      */
-    handleDeleteLayer(z) {
-      this.layerData.forEach((layer, index) => {
-        if (layer.z === z) {
-          this.layerData.splice(index, 1);
-        }
-      });
+    transmitDeleteLayer(z) {
+      if (this.signalClient) {
+        this.signalClient.peers().forEach((peer) => {
+          peer.send(z);
+        });
+      }
     },
     /**
      * Handler to update layerData based on RTC peer signals
      * Replaces the layer with matching z value.
      * If there is no matching z value, it is assumed that the layer is to be added
      */
-    handleReceiveLayer(layer) {
-      this.layerData.forEach((curLayer, index) => {
-        if (curLayer.z === layer.z) {
-          this.$set(this.layerData, index, layer);
-        } else {
-          this.pushLayer(layer);
-        }
-      });
+    handleReceiveData(data) {
+      // first check if the data is a layer index to be deleted, or a layer object to be updated
+      if (isNaN(data)) {
+        this.layerData.forEach((curLayer, index) => {
+          if (curLayer.z === data.z) {
+            this.$set(this.layerData, index, data);
+          } else {
+            this.pushLayer(data);
+          }
+        });
+      } else {
+        this.layerData.forEach((curLayer, index) => {
+          if (curLayer.z === data) {
+            this.layerData.splice(index, 1);
+          }
+        });
+      }
     },
   }, // end methods
   computed: {
