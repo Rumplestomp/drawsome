@@ -1,5 +1,12 @@
 version: "3.7"
 
+# Build: docker-compose -f swarm.yml build
+# Up:    docker stack deploy -c swarm.yml drawsome
+# Check: docker stack services drawsome
+#        docker service ps drawsome_<frontend|backend|mongodb>
+#        docker service logs drawsome_<frontend|backend|mongodb>
+# Down:  docker stack rm drawsome
+
 networks:
   net:
 
@@ -27,7 +34,7 @@ services:
     deploy:
       replicas: 1
 
-  mongo:
+  mongodb:
     image: mongo:4.2.3
     networks:
       - net
