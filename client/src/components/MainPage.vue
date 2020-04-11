@@ -175,7 +175,7 @@ export default {
     },
     connectSignalingServer() {
       if (!this.signalClient) {
-        const socket = io(window.location);
+        const socket = io('backend:3000');
         this.signalClient = new SimpleSignalClient(socket);
         // the action to take when discovered by signaling server
         this.signalClient.on('discover', async (allIds) => { // depends on wtfs going on
