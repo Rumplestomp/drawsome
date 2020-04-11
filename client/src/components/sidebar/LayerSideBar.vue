@@ -8,6 +8,7 @@
             <SideBarItem
               v-on:delete:layer="handleDeleteLayer($event)"
               v-on:change:layer="handleLiftLayer($event)"
+              v-on:update:layer="handleLiftLayer($event)"
               :layerItem="layer"
               :canvasConfig="canvasConfig"
               >
@@ -47,9 +48,12 @@ export default {
   },
   methods: {
     handleDeleteLayer(layer) {
+      const z = layer.z;
       for (let i = 0; i < this.layerData.length; i += 1) {
-        if (layer.z === this.layerData[i].z) {
+        if (z === this.layerData[i].z) {
           this.layerData.splice(i, 1);
+          // tell parent component to handle deletion of the layer
+          this.$emit('delete:layer', z);
         }
       }
     },
@@ -76,6 +80,13 @@ export default {
           this.layerData.splice(Math.min(i, i - increment), 2, this.layerData[Math.max(i, i - increment)], this.layerData[Math.min(i, i - increment)]);
         }
       }
+    },
+    /**
+     * Function used to send update data to parent component for RTC transmission
+     * Has no effect if user is not in a collaboration session.
+     */
+    handleUpdateLayer(event) {
+      this.$emit('update:layer', event);
     },
   },
 };

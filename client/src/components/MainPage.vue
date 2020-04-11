@@ -1,21 +1,16 @@
 <template>
   <div class="hello">
     <Navbar/>
+
+    <!-- Vertical Spacing -->
     <mdbContainer class="mb-5">
-      <!-- <h1>Drawesome</h1> -->
-      <!-- <ImageUpload
-        :backgroundImage=backgroundImage
-        v-on:update:backgroundImage="backgroundImage = $event"
-      >
-        <div slot="activator">
-          <mdbBtn>Set Background Image</mdbBtn>
-        </div>
-      </ImageUpload> -->
     </mdbContainer>
 
     <mdbContainer fluid>
       <mdbRow class="justify-content-around">
         <mdbCol col=9>
+
+          <!-- Buttons Above Canvas -->
           <mdbRow class="mb-2">
             <mdbCol md=3>
             <ImageUpload
@@ -41,13 +36,15 @@
                 </mdb-modal-header>
                 <mdb-modal-body class="mx-3 grey-text">
                   <mdb-btn color="" @click="peerHost">Start Session</mdb-btn>
-                  <p v-if="collabCode">Your Collab code: {{collabCode}}</p>
-                  <mdb-input label="Collab Code" icon="lock" type="text"/>
+                  <p class="teal-text" v-if="collabCode && hosting">Your Collab code: <span class="grey-text">{{collabCode}}</span> </p>
+                  <mdb-input label="Collab Code" icon="lock" type="text" v-model="joinCode"/>
+                  <mdb-btn color="" @click="peerJoin(joinCode)">Join Session</mdb-btn>
                 </mdb-modal-body>
               </mdb-modal>
             </mdbCol>
-
           </mdbRow>
+
+          <!-- Main Canvas Component -->
           <mdbCard>
             <Canvass
               ref="canvass"
@@ -63,6 +60,8 @@
           <LayerInputForm v-on:submit:newLayer="pushLayer($event)"></LayerInputForm>
           <div class="pb-3"/>
           <LayerSideBar
+            v-on:update:layer="handleUpdateLayer($event)"
+            v-on:delete:layer="handleDeleteLayer($event)"
             :layerData=layerData
             :canvasConfig="canvasConfig"
           />
@@ -74,6 +73,8 @@
 </template>
 
 <script>
+/* eslint-disable no-console */
+
 // UTILITY IMPORTS //
 // import Peer from 'simple-peer';
 import io from 'socket.io-client';
@@ -129,9 +130,11 @@ export default {
       topLayerNum: 0,
       collaborateModal: false, // used for modal activation
       // WEBSOCKET + WEBRTC //
+      hosting: false,
       collabCode: null,
-      connectedPeer: null, //      will be the simple-peer object used for webRTC communication
+      joinCode: '',
       signalClient: null, //  will be the client for the signaling server, used to set up webRTC connection
+      allIds: [],
     };
   },
   created() {
@@ -160,33 +163,109 @@ export default {
     },
     async peerHost() {
       // Either give user random unique code, or use their username as the id to send to the signaling server
+      this.hosting = true;
       await this.connectSignalingServer();
-      // upon new connections to the host, we send the entire layerData for initialization on the client
-      if (!this.connectedPeer) {
-        this.connectedPeer.on('connect', () => {
-          this.connectedPeer.send(JSON.stringify(this.layerData));
+      // The unique ID is displayed dynamically, to be able to share with friends
+      // console.log(this.connectedPeer.WEBRTC_SUPPORT);
+    },
+    async peerJoin(id) {
+      this.connectSignalingServer();
+      await this.signalClient.connect(id);
+    },
+    // as a host, this code initializes the peer who is connecting to you
+    peerInit(peer, host=true) {
+      if (host) {
+        peer.on('connect', () => {
+          // send layer data to peer
+          peer.send(JSON.stringify(this.layerData));
         });
       }
-      // this.connectedPeer.on('')
-      // console.log(Peer.WEBRTC_SUPPORT);
+      peer.on('data', (data) => {
+        this.handleReceiveLayer(data);
+      });
     },
-    peerJoin() {
-      this.connectSignalingServer();
-    },
+    /**
+     * Function to connect to the websocket signaling server, and get ones own collaboration code
+     *
+     * Initializes the following:
+     * this.signalClient:   SimpleSignalClient  object
+     * this.collabCode:     str                 used for sending invites
+     * this.allIds:         str[]               all Ids of users connected to ws signaling server
+     *
+     * Note that this.signalClient.peers is an array of all connected peers
+     */
     connectSignalingServer() {
       if (!this.signalClient) {
-        const socket = io('backend:3000');
+        const socket = io('127.0.0.1:3000');
+        // const socket = io(`${process.env.HOST}:3000`);
         this.signalClient = new SimpleSignalClient(socket);
+        console.log('signalClient.id (before discovery):', this.signalClient.id);
         // the action to take when discovered by signaling server
         this.signalClient.on('discover', async (allIds) => { // depends on wtfs going on
-          const id = allIds[0];
-          this.connectedPeer = await this.signalClient.connect(id);
+          console.log('client discovery');
+          console.log('signalClient.id (after discovery):', this.signalClient.id);
+          this.collabCode = this.signalClient.id;
+          console.log(JSON.parse(JSON.stringify(allIds)));
+          this.allIds = allIds;
         });
         // the action to take when a request to from someone else to join you occurs
-        this.signalClient.on('request', async (request) => { // depends on wtfs going on
-          this.connectedPeer = await request.accept();
+        this.signalClient.on('request', async (request) => {
+          const { peer } = await request.accept();
+          // initialize this peer
+          this.peerInit(peer);
+        });
+        if (this.signalClient) {
+          this.signalClient.discover();
+        }
+      } // end if
+    },
+    /**
+     * Handler used to transmit specific updated layer data.
+     */
+    handleUpdateLayer(layer) {
+      if (this.signalClient) {
+        this.signalClient.peers.forEach((peer) => {
+          peer.send(layer);
         });
       }
+    },
+    /**
+     * Handler to delete layer based on RTC peer signals
+     */
+    handleDeleteLayer(z) {
+      this.layerData.forEach((layer, index) => {
+        if (layer.z === z) {
+          this.layerData.splice(index, 1);
+        }
+      });
+    },
+    /**
+     * Handler to update layerData based on RTC peer signals
+     * Replaces the layer with matching z value.
+     * If there is no matching z value, it is assumed that the layer is to be added
+     */
+    handleReceiveLayer(layer) {
+      this.layerData.forEach((curLayer, index) => {
+        if (curLayer.z === layer.z) {
+          this.$set(this.layerData, index, layer);
+        } else {
+          this.pushLayer(layer);
+        }
+      });
+    },
+  }, // end methods
+  computed: {
+    // used for keeping track of layerData before and after changes
+    computedLayerData() {
+      return Object.assign({}, this.layerData);
+    },
+  },
+  watch: {
+    computedLayerData: {
+      deep: true,
+      handler(newval, oldval) {
+        console.log(JSON.parse(JSON.stringify(newval)), JSON.parse(JSON.stringify(oldval)));
+      },
     },
   },
 };

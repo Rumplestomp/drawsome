@@ -227,6 +227,8 @@ const io = socket(server);
 const signalServer = signal(io);
 const allIDs = new Set();
 
+io.origins(["backend:*", "frontend:*", "127.0.0.1:*"]);
+
 signalServer.on("discover", (request) => {
     const clientID = request.socket.id;
     allIDs.add(clientID);

@@ -131,6 +131,15 @@ export default {
       this.$emit('change:layer', { layer: this.layerItem, incr: increment });
     },
   },
+  watch: {
+    layerItem: {
+      deep: true,
+      // this handler will handle changes in data as well as layer lifting (change in z values)
+      handler(newval) {
+        this.$emit('update:layer', this.layerItem);
+      },
+    },
+  },
 };
 </script>
 <style scoped>
