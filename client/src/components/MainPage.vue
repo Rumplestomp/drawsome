@@ -33,11 +33,6 @@
             </mdbCol>
 
             <mdbCol md=2>
-            <!-- TODO: IMPLEMENT BTN FUNCTIONALITY -->
-            <!-- <mdbBtn >Collaborate</mdbBtn> -->
-
-            <!--  -->
-            <!-- <mdb-container> -->
               <mdb-btn color="default" @click.native="collaborateModal=true">Collaborate</mdb-btn>
               <!-- Modal for collaboration button -->
               <mdb-modal :show="collaborateModal" @close="collaborateModal = false">
@@ -50,8 +45,6 @@
                   <mdb-input label="Collab Code" icon="lock" type="text"/>
                 </mdb-modal-body>
               </mdb-modal>
-            <!-- </mdb-container> -->
-
             </mdbCol>
 
           </mdbRow>
@@ -82,7 +75,9 @@
 
 <script>
 // UTILITY IMPORTS //
-import Peer from 'simple-peer';
+// import Peer from 'simple-peer';
+import io from 'socket.io-client';
+import SimpleSignalClient from 'simple-signal-client';
 // MDB STYLING IMPORTS //
 import mdbContainer from 'mdbvue/lib/components/mdbContainer';
 import mdbRow from 'mdbvue/lib/components/mdbRow';
@@ -102,8 +97,9 @@ import LayerSideBar from './sidebar/LayerSideBar';
 import LayerInputForm from './LayerInputForm';
 import Navbar from './Navbar';
 
+
 export default {
-  name: 'HelloWorld',
+  name: 'MainPage',
   components: {
     // LOCAL COMPONENTS
     Canvass,
@@ -127,13 +123,15 @@ export default {
   data() {
     return {
       canvDefault: 'This just some text passed to the Canvass component',
-      backgroundImage: null, // will become a file object!
+      backgroundImage: null, //   will become a file object!
       layerData: [],
       canvasConfig: null,
       topLayerNum: 0,
       collaborateModal: false, // used for modal activation
+      // WEBSOCKET + WEBRTC //
       collabCode: null,
-      selfPeer: null,
+      selfPeer: null, //      will be the simple-peer object used for webRTC communication
+      signalClient: null, //  will be the client for the signaling server, used to set up webRTC connection
     };
   },
   created() {
@@ -160,17 +158,35 @@ export default {
       link.click();
       document.body.removeChild(link);
     },
-    peerHost() {
-      this.selfPeer = new Peer({ objectMode: true });
+    async peerHost() {
+      // Either give user random unique code, or use their username as the id to send to the signaling server
+      await this.connectSignalingServer();
       // upon new connections to the host, we send the entire layerData for initialization on the client
-      this.selfPeer.on('connect', () => {
-        this.selfPeer.send(JSON.stringify(this.layerData));
-      });
-      this.selfPeer.on('')
-      console.log(Peer.WEBRTC_SUPPORT);
+      if (!this.selfPeer) {
+        this.selfPeer.on('connect', () => {
+          this.selfPeer.send(JSON.stringify(this.layerData));
+        });
+      }
+      // this.selfPeer.on('')
+      // console.log(Peer.WEBRTC_SUPPORT);
     },
     peerJoin() {
-
+      this.connectSignalingServer();
+    },
+    connectSignalingServer() {
+      if (!this.signalClient) {
+        const socket = io(window.location);
+        this.signalClient = new SimpleSignalClient(socket);
+        // the action to take when discovered by signaling server
+        this.signalClient.on('discover', async (allIds) => { // depends on wtfs going on
+          const id = allIds[0];
+          this.selfPeer = await this.signalClient.connect(id);
+        });
+        // the action to take when a request to from someone else to join you occurs
+        this.signalClient.on('request', async (request) => { // depends on wtfs going on
+          this.selfPeer = await request.accept();
+        });
+      }
     },
   },
 };

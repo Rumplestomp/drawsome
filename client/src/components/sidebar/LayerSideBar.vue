@@ -71,7 +71,6 @@ export default {
 
           this.$set(this.layerData[i], 'z', newZ);
           this.$set(this.layerData[i - increment], 'z', oldZ);
-          // console.log(this.layerData[i].z);
           // swap postitions in array, but keep data reactive
           // [this.layerData[i], this.layerData[i + increment]] = [this.layerData[i + increment], this.layerData[i]];
           this.layerData.splice(Math.min(i, i - increment), 2, this.layerData[Math.max(i, i - increment)], this.layerData[Math.min(i, i - increment)]);

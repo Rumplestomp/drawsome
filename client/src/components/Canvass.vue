@@ -93,7 +93,6 @@ export default {
 
   computed: {
     backgroundImageLayer() {
-      // console.log('backgroundImageLayer change in canvas component');
       if (!this.backgroundImage) {
         return null;
       }
