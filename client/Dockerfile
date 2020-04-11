@@ -13,6 +13,7 @@ COPY build ./build
 COPY .eslintrc.js ./
 COPY .eslintignore ./
 COPY .postcssrc.js ./
+COPY static ./static
 
 EXPOSE 8080
 
