@@ -3,9 +3,6 @@ import Text from './Text';
 
 export default class CanvasLayer {
   constructor({ fill = 'black', x = 0, y = 0, z = 0, rotation = 0, opacity = 1, scale = 1 } = {}) {
-  /** WEBRTC DATA */
-    // localChange: bool    REQUIRED A boolean flag stating whether or nor the latest change to this layer was from a webRTC Peer, or locally
-    this.localChange = true;
     /** GENERAL DATA */
     // isBackground: bool   REQUIRED A boolean saying whether or not this is the background layer
     this.isBackground = false;
