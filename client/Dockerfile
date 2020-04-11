@@ -10,6 +10,8 @@ COPY src ./src
 COPY config ./config
 COPY index.html ./
 COPY build ./build
+COPY .eslintrc.js ./
+COPY .eslintignore ./
 
 EXPOSE 8080
 
