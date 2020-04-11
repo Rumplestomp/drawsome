@@ -12,6 +12,7 @@ COPY index.html ./
 COPY build ./build
 COPY .eslintrc.js ./
 COPY .eslintignore ./
+COPY .postcssrc.js ./
 
 EXPOSE 8080
 
