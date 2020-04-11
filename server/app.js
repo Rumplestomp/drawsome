@@ -32,9 +32,9 @@ const upload = multer({
     fileFilter: (req, file, callback) => {
         let ext = path.extname(file.originalname);
         if (ext !== ".png" && ext !== ".jpg" && ext !== ".jpeg") {
-            return callback(new Error("not an image"))
+            return callback(new Error("not an image"));
         }
-        callback(null, true)
+        callback(null, true);
     }
 });
 
