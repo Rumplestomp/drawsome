@@ -55,7 +55,7 @@ const signal = require("simple-signal-server");
 // Constants ------------------------------------------------------------
 
 const PORT = 3000;
-const MONGO_URL = "mongodb://mongo:27017";
+const MONGO_URL = "mongodb://mongodb:27017";
 const IMAGE_COLLECTION = "images";
 const USER_COLLECTION = "users";
 const COOKIE_OPTIONS = {

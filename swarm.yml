@@ -31,6 +31,8 @@ services:
       - net
     ports:
       - 3000:3000
+    environment:
+      SESSION_SECRET: ${SESSION_SECRET:?no_session_secret}
     deploy:
       replicas: 1
 
