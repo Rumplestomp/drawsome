@@ -6,10 +6,10 @@ COPY package.json .
 
 RUN npm install
 
-COPY src ./
-COPY config ./
+COPY src ./src
+COPY config ./config
 COPY index.html ./
-COPY build ./
+COPY build ./build
 
 EXPOSE 8080
 
