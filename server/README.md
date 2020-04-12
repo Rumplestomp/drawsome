@@ -46,6 +46,50 @@ $ curl -X POST
        http://localhost:3000/api/signin/
 ```
 
+- description: sign out from a user
+- request: `GET /api/signout/`
+    - content-type: `application/json`
+- response: 200
+    - content-type: `application/json`
+    - redirect: `/`
+
+```
+$ curl -b cookie.txt
+       -c cookie.txt
+       http://localhost:3000/api/signout/
+```
+
 ### Create
 
+- description: add a new image
+- request: `POST /api/image/`
+    - content-type: `multipart/form-data`
+    - body: object
+        - image: (object) form data for the image
+- response: 200
+    - content-type: `application/json`
+    - body: id (string)
+- response: 400
+    - body: missing file
+
+```
+$ curl -X POST
+       -H "Content-Type: multipart/form-data"
+       -F image="@/path/to/file.jpg"
+       -b cookie.txt
+       http://localhost:3000/api/image/
+```
+
 ### Read
+
+- description: get an image by id
+- request: `GET /api/image/:id/`
+- response: 200
+    - content-type: `imageMimeType`
+- response: 404
+    - body: image id does not exist
+
+```
+$ curl -b cookie.txt
+       http://localhost:3000/api/image/dRaWsOmEpIcTuReS/
+```
