@@ -49,10 +49,9 @@ export default {
       this.$refs.file.click();
     },
     async onFileChange(fieldName, file) {
-      const { maxSize } = this;
       const imageFile = file[0];
       if (file.length > 0) {
-        const size = imageFile.size / maxSize / maxSize;
+        const size = imageFile.size / this.maxSize / this.maxSize;
         if (!imageFile.type.match('image.*')) {
           // check whether the upload is an image
           this.errorDialog = true;
