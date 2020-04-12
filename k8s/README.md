@@ -1,6 +1,6 @@
 # k8s
 
-## learning
+## /learning
 
 Guides:
 - https://cloud.google.com/kubernetes-engine/docs/tutorials/http-balancer
