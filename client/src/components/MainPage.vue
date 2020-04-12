@@ -257,7 +257,7 @@ export default {
     transmistBackgroundImage() {
       if (this.signalClient && this.localLayerChange) {
         this.signalClient.peers().forEach((peer) => {
-          peer.send(JSON.stringify({ backgroundImage: this.backgroundImage }));
+          peer.send(JSON.stringify({ backgroundImage: this.backgroundImage, action: 'backgroundImage' }));
         });
       } else {
         this.localLayerChange = true;
