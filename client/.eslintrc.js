@@ -27,6 +27,9 @@ module.exports = {
   rules: {
     'max-len': 0,
     'consistent-return': 0,
+    'func-names': 0,
+    'quote-props': 0,
+    'prefer-const': 0,
     // don't require .vue extension when importing
     'import/extensions': ['error', 'always', {
       js: 'never',

@@ -125,18 +125,18 @@ export default {
   data() {
     return {
       canvDefault: 'This just some text passed to the Canvass component',
-      backgroundImage: null, //   will become a file object!
-      layerData: [],
-      canvasConfig: null,
-      topLayerNum: 0,
+      backgroundImage: null, // will be the url to the image saved, to be used as the background image.
+      layerData: [], // the data that represents the layers on the canvas
+      canvasConfig: null, // used to set width and height of canvas (once a background image is set)
+      topLayerNum: 0, // used to keep track of the highest layer's z value
       collaborateModal: false, // used for modal activation
       // WEBSOCKET + WEBRTC //
-      localLayerChange: false,
-      hosting: false,
-      collabCode: '',
-      joinCode: '',
+      localLayerChange: false, // used to track changes to layerData that were made from RTC signals
+      hosting: false, // flag for determining if current user is the host of the webRTC connection
+      collabCode: '', // the collaboration code needed as a host to invite more users
+      joinCode: '', // the code that a user would use to join a hosting user
       signalClient: null, //  will be the client for the signaling server, used to set up webRTC connection
-      allIds: [],
+      allIds: [], // UNEEDED; a list of all IDs gotten from the signaling server
     };
   },
   created() {
@@ -264,9 +264,9 @@ export default {
       switch (action) {
         case 'init':
           this.layerData = rtcData;
+          this.topLayerNum = Math.max(rtcData[0].z, rtcData[rtcData.length - 1].z);
           break;
         case 'update':
-          // rtcData.localChange = false;
           this.layerData.forEach((curLayer, index) => {
             if (curLayer.z === rtcData.z) {
               this.$set(this.layerData, index, rtcData);

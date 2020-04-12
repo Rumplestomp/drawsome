@@ -48,7 +48,7 @@ export default {
     launchFilePicker() {
       this.$refs.file.click();
     },
-    onFileChange(fieldName, file) {
+    async onFileChange(fieldName, file) {
       const { maxSize } = this;
       const imageFile = file[0];
       if (file.length > 0) {
@@ -62,8 +62,14 @@ export default {
           this.errorDialog = true;
           this.errorText = 'Your file is too big! Please select an image under 4MB';
         } else {
+          let data = new FormData();
+          data.append('image', imageFile);
+          let url = await fetch('http://127.0.0.1:3000/api/image', {
+            method: 'POST',
+            body: data,
+          });
           // emit event to update backgroundImage in parent component
-          this.$emit('update:backgroundImage', imageFile);
+          this.$emit('update:backgroundImage', url);
         }
       }
     },

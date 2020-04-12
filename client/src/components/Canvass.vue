@@ -68,7 +68,7 @@ export default {
   name: 'Canvass',
   props: {
     yeet: String,
-    backgroundImage: File,
+    backgroundImage: String,
     layerData: Array,
   },
   data: () => ({
@@ -96,9 +96,9 @@ export default {
       if (!this.backgroundImage) {
         return null;
       }
-      const imageURL = URL.createObjectURL(this.backgroundImage);
+      // const imageURL = URL.createObjectURL(this.backgroundImage);
       const img = new window.Image();
-      img.src = imageURL;
+      img.src = `http://127.0.0.1:3000/api/image/${this.backgroundImage}`;
       img.onload = () => {
         this.setKonvaConfig({ width: img.width, height: img.height });
       };
