@@ -6,5 +6,6 @@
 3. Docs
 4. Video
 5. Survey
+6. Notes/explanations?
 
 Reference: (https://piazza.com/class/k4bmntvkeyg2x4?cid=355)
