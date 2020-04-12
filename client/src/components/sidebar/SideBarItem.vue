@@ -136,7 +136,9 @@ export default {
       deep: true,
       // this handler will handle changes in data as well as layer lifting (change in z values)
       handler(newval) {
-        this.$emit('update:layer', this.layerItem);
+        if (this.layerItem.localChange) {
+          this.$emit('update:layer', this.layerItem);
+        }
       },
     },
   },

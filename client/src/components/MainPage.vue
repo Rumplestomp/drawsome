@@ -131,6 +131,7 @@ export default {
       topLayerNum: 0,
       collaborateModal: false, // used for modal activation
       // WEBSOCKET + WEBRTC //
+      localLayerChange: false,
       hosting: false,
       collabCode: '',
       joinCode: '',
@@ -180,11 +181,11 @@ export default {
         peer.on('connect', () => {
           // send layer data to peer
           console.log('peer connected!!');
-          peer.send(JSON.stringify(this.layerData));
+          peer.send(JSON.stringify({ data: this.layerData, action: 'init' }));
         });
       }
       peer.on('data', (data) => {
-        this.handleReceiveLayer(data);
+        this.handleReceiveData(JSON.parse(data));
       });
     },
     /**
@@ -232,19 +233,21 @@ export default {
      * Handler used to transmit specific updated layer data.
      */
     transmitUpdateLayer(layer) {
-      if (this.signalClient) {
+      if (this.signalClient && this.localLayerChange) {
         this.signalClient.peers().forEach((peer) => {
-          peer.send(layer);
+          peer.send(JSON.stringify({ data: layer, action: 'update' }));
         });
+      } else {
+        this.localLayerChange = true;
       }
     },
     /**
      * Handler to delete layer based on RTC peer signals
      */
     transmitDeleteLayer(z) {
-      if (this.signalClient) {
+      if (this.signalClient && this.localLayerChange) {
         this.signalClient.peers().forEach((peer) => {
-          peer.send(z);
+          peer.send(JSON.stringify({ data: z, action: 'delete' }));
         });
       }
     },
@@ -254,21 +257,33 @@ export default {
      * If there is no matching z value, it is assumed that the layer is to be added
      */
     handleReceiveData(data) {
-      // first check if the data is a layer index to be deleted, or a layer object to be updated
-      if (isNaN(data)) {
-        this.layerData.forEach((curLayer, index) => {
-          if (curLayer.z === data.z) {
-            this.$set(this.layerData, index, data);
-          } else {
-            this.pushLayer(data);
-          }
-        });
-      } else {
-        this.layerData.forEach((curLayer, index) => {
-          if (curLayer.z === data) {
-            this.layerData.splice(index, 1);
-          }
-        });
+      // check for each possible action
+      const action = data.action;
+      const rtcData = data.data;
+      this.localLayerChange = false;
+      switch (action) {
+        case 'init':
+          this.layerData = rtcData;
+          break;
+        case 'update':
+          // rtcData.localChange = false;
+          this.layerData.forEach((curLayer, index) => {
+            if (curLayer.z === rtcData.z) {
+              this.$set(this.layerData, index, rtcData);
+            } else {
+              this.pushLayer(rtcData);
+            }
+          });
+          break;
+        case 'delete':
+          this.layerData.forEach((curLayer, index) => {
+            if (curLayer.z === rtcData) {
+              this.layerData.splice(index, 1);
+            }
+          });
+          break;
+        default:
+          break;
       }
     },
   }, // end methods
