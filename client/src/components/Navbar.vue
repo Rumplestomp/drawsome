@@ -10,14 +10,20 @@
       </mdbNavbar-nav>
       <!-- ADD SIGNIN HERE -->
       <mdbDropdown tag="li" class="nav-item">
-          <mdbDropdownToggle tag="a" navLink slot="toggle" waves-fixed>Profile</mdbDropdownToggle>
+          <mdbDropdownToggle v-if="authUsername"  tag="a" navLink slot="toggle" waves-fixed>{{authUsername}}</mdbDropdownToggle>
+          <mdbDropdownToggle v-else               tag="a" navLink slot="toggle" waves-fixed>Profile</mdbDropdownToggle>
           <!-- <form>
             <mdbInput type="text" class="text-white" placeholder="Search" aria-label="Search" label navInput/>
           </form> -->
           <mdbDropdownMenu right>
-            <mdbDropdownItem @click.native="registering=false; authenticateModal=true">Sign In</mdbDropdownItem>
-            <div class="dropdown-divider"></div>
-            <mdbDropdownItem @click.native="registering=true; authenticateModal=true">Register</mdbDropdownItem>
+            <div v-if="authUsername">
+              <mdbDropdownItem @click.native="signout">Sign Out</mdbDropdownItem>
+            </div>
+            <div v-else>
+              <mdbDropdownItem @click.native="registering=false; authenticateModal=true">Sign In</mdbDropdownItem>
+              <div class="dropdown-divider"></div>
+              <mdbDropdownItem @click.native="registering=true; authenticateModal=true">Register</mdbDropdownItem>
+            </div>
           </mdbDropdownMenu>
       </mdbDropdown>
     </mdbNavbar-toggler>
@@ -81,8 +87,6 @@ export default {
       /** FORM DATA */
       user: '',
       pass: '',
-      /** AUTH DATA */
-      authUsername: '',
     };
   },
   methods: {
@@ -100,10 +104,12 @@ export default {
         // close modal upon signing in
         this.authenticateModal = false;
         // console.log('response:', response);
-      })
-        .catch(function (err) {
-          this.invalidRegister = err;
-        });
+      }).catch(function (err) {
+        this.invalidRegister = err;
+      }).finally(() => {
+        this.user = '';
+        this.pass = '';
+      });
     },
     signin() {
       fetch('http://127.0.0.1:3000/signin', {
@@ -120,11 +126,27 @@ export default {
         this.authenticateModal = false;
 
         // console.log('response:', response);
-      })
-        .catch(function () {
-          this.invalidCreds = true;
-        });
+      }).catch(function () {
+        this.invalidCreds = true;
+      }).finally(() => {
+        this.user = '';
+        this.pass = '';
+      });
     },
+    signout() {
+      fetch('http://127.0.0.1:3000/signout', {
+        method: 'GET',
+        credentials: 'include',
+      }).then(() => {
+        this.user = '';
+        this.pass = '';
+      });
+    },
+  },
+  computed: {
+    authUsername() {
+      return this.$cookies.get('username') || '';
+    }
   },
 };
 </script>

@@ -5,12 +5,13 @@ import 'mdbvue/lib/css/mdb.min.css';
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue';
 import VueKonva from 'vue-konva';
+import VueCookies from 'vue-cookies';
 import App from './App';
 import router from './router';
 
 Vue.config.productionTip = false;
 Vue.use(VueKonva);
-
+Vue.use(VueCookies);
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
