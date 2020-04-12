@@ -62,8 +62,8 @@ const COOKIE_OPTIONS = {
     path: "/",
     maxAge: 60 * 60 * 24 * 7, // 1 week in seconds
     httpOnly: false,
-    secure: true,
-    sameSite: true
+    secure: false,
+    sameSite: false
 };
 
 // Middleware ------------------------------------------------------------
@@ -76,15 +76,25 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: {
-        httpOnly: true,
-        secure: true,
-        sameSite: true
+        httpOnly: false,
+        secure: false,
+        sameSite: false
     }
 }));
 
 app.use((req, res, next) => {
     let username = (req.session.username) ? req.session.username : "";
     res.setHeader("Set-Cookie", cookie.serialize("username", username, COOKIE_OPTIONS));
+    next();
+});
+
+app.use((req, res, next) => {
+    let origin = req.get('origin');
+    if (["http://127.0.0.1:8080", "https://127.0.0.1:8080", "https://drawsome.pictures"].includes(origin)) {
+      res.header("Access-Control-Allow-Origin", origin); // update to match the domain you will make the request from
+      console.log(origin);
+      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    }
     next();
 });
 
