@@ -10,7 +10,7 @@ project-cscc09_alex_chedy created by GitHub Classroom
 
 [Video URL]()
 
-[Doc URL]()
+[Doc URL](server/README.md)
 
 ## Project Title
 
