@@ -4,8 +4,6 @@ project-cscc09_alex_chedy created by GitHub Classroom
 
 [Project page](https://thierrysans.me/CSCC09/project/)
 
-[Piazza post for deliverables and deadlines](https://piazza.com/class/k4bmntvkeyg2x4?cid=355)
-
 ## Project Title
 
 Drawesome
