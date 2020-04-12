@@ -4,6 +4,7 @@ metadata:
   name: fanout-ingress
   annotations:
     kubernetes.io/ingress.global-static-ip-name: web-static-ip
+    networking.gke.io/managed-certificates: drawsome-certificate
 spec:
   rules:
   - http:
