@@ -87,7 +87,12 @@ export default {
       /** FORM DATA */
       user: '',
       pass: '',
+      authUsername: '',
     };
+  },
+  created() {
+    // intialize username if they are signed in
+    this.updateAuthData();
   },
   methods: {
     register() {
@@ -108,8 +113,7 @@ export default {
       }).catch(function (err) {
         this.invalidRegister = err;
       }).finally(() => {
-        this.user = '';
-        this.pass = '';
+        this.updateAuthData();
       });
     },
     signin() {
@@ -130,9 +134,9 @@ export default {
         // console.log('response:', response);
       }).catch(function (err) {
         this.invalidCreds = err;
+        this.authUsername = '';
       }).finally(() => {
-        this.user = '';
-        this.pass = '';
+        this.updateAuthData();
       });
     },
     signout() {
@@ -140,14 +144,13 @@ export default {
         method: 'GET',
         credentials: 'include',
       }).then(() => {
-        this.user = '';
-        this.pass = '';
+        this.updateAuthData();
       });
     },
-  },
-  computed: {
-    authUsername() {
-      return this.$cookies.get('username') || '';
+    updateAuthData() {
+      this.user = '';
+      this.pass = '';
+      this.authUsername = this.$cookies.get('username') || '';
     },
   },
 };
