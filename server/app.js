@@ -172,6 +172,7 @@ app.get("/api/image/:id/", [
     let db = req.app.get("db");
     db.collection(IMAGE_COLLECTION).findOne({ "_id": ObjectId(id) }, (err, result) => {
         if (err) return res.status(500).end(err);
+        if (!result) return res.status(404).end(`image ${id} does not exist`);
 
         res.contentType(result.contentType);
         res.send(result.image.buffer);
@@ -188,7 +189,7 @@ app.post("/api/signup/", [
     let db = req.app.get("db");
     db.collection(USER_COLLECTION).findOne({ _id: username }, (err, result) => {
         if (err) return res.status(500).end(err);
-        if (result) return res.status(409).end(`username ${username} already exists`);
+        if (result) return res.status(409).end(`user ${username} already exists`);
 
         let salt = generateSalt();
         let saltedHash = generateSaltedHash(password, salt);
