@@ -69,9 +69,11 @@ export default {
             body: data,
           }).then((response) => {
             console.log(response);
-            const url = response.body;
+            // response.text() is another promise that gets chained
+            return response.text();
+          }).then((text) => {
             // emit event to update backgroundImage in parent component
-            this.$emit('update:backgroundImage', url);
+            this.$emit('update:backgroundImage', text);
           }).catch((err) => {
             console.err(err);
           });
