@@ -5,6 +5,5 @@
     - https://github.com/kubernetes/kubernetes/issues/33664
 3. Docs
 4. Video
-5. Survey
 
-Reference: (https://piazza.com/class/k4bmntvkeyg2x4?cid=355)
+Reference: (https://piazza.com/class/k4bmntvkeyg2x4?cid=397)
