@@ -1,0 +1,57 @@
+name: Docker CD
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  webpack:
+    runs-on: ubuntu-latest
+    name: Webpack
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: npm install and build webpack
+      run: |
+        cd client
+        npm install
+        npm run build
+    - name: Upload Webpack Artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: webpack-artifact
+        path: client/dist/
+
+  frontend:
+    runs-on: ubuntu-latest
+    needs: webpack
+    name: Build, Tag, Push Frontend Image
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Download Webpack Artifact
+      uses: actions/download-artifact@master
+      with:
+        name: webpack-artifact
+        path: client/dist/
+      run: ls client/dist/
+    - name: Build, Tag, Push
+      uses: mattdavis0351/actions/docker-gpr@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        image-name: drawsome-frontend
+        dockerfile-location: client/
+
+  backend:
+    runs-on: ubuntu-latest
+    name: Build, Tag, Push Backend Image
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Build, Tag, Push
+      uses: mattdavis0351/actions/docker-gpr@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        image-name: drawsome-backend
+        dockerfile-location: server/
