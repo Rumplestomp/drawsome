@@ -1,3 +1,6 @@
+# Should have made more resilient:
+# https://kubernetes.io/blog/2017/01/running-mongodb-on-kubernetes-with-statefulsets/
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
