@@ -66,6 +66,7 @@ export default {
           data.append('image', imageFile);
           let url = await fetch('http://127.0.0.1:3000/api/image', {
             method: 'POST',
+            credentials: 'include',
             body: data,
           });
           // emit event to update backgroundImage in parent component

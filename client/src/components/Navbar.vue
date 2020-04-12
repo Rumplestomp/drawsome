@@ -95,7 +95,7 @@ export default {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username: this.user, password: this.pass }),
-      }).then((response) => {
+      }).then(() => {
         this.invalidRegister = false;
         // close modal upon signing in
         this.authenticateModal = false;
@@ -114,7 +114,7 @@ export default {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username: this.user, password: this.pass }),
-      }).then((response) => {
+      }).then(() => {
         this.invalidCreds = false;
         // close modal upon signing in
         this.authenticateModal = false;
