@@ -2,7 +2,7 @@
 
 // Course Work
 // lab5 - Storing Data
-// hw3 - Building the Backend
+// hw2 - Building the Backend
 // lab6 - User Authentication
 // hw3 - Managing Users and Security
 // lab7 - Web Security
