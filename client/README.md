@@ -1,4 +1,4 @@
-# drawesome
+# client
 
 > Frontend code for a Drawesome; A collaborative image editor web application for CSCC09
 
