@@ -9,6 +9,9 @@
     - https://cloud.google.com/kubernetes-engine/docs/concepts/ingress
 2. Uncomment cookie security settings
 3. Deploy
+    - https://discuss.kubernetes.io/t/use-latest-image-tag-to-update-a-deployment/2929
+    - https://stackoverflow.com/questions/40366192/kubernetes-how-to-make-deployment-to-update-image
+    - https://github.com/kubernetes/kubernetes/issues/33664
 4. Docs
 5. Video
 6. Survey
