@@ -63,13 +63,21 @@ export default {
         } else {
           let data = new FormData();
           data.append('image', imageFile);
-          let url = await fetch('http://127.0.0.1:3000/api/image', {
+          fetch('http://127.0.0.1:3000/api/image', {
             method: 'POST',
             credentials: 'include',
             body: data,
+          }).then((response) => {
+            console.log(response.clone());
+            // response.text() is another promise that gets chained
+            if (response.status >= 400) { throw response.text(); }
+            return response.json();
+          }).then((text) => {
+            // emit event to update backgroundImage in parent component
+            this.$emit('update:backgroundImage', text);
+          }).catch((err) => {
+            console.err(err);
           });
-          // emit event to update backgroundImage in parent component
-          this.$emit('update:backgroundImage', url);
         }
       }
     },

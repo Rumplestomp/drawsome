@@ -91,10 +91,12 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
     let origin = req.get('origin');
     if (["http://127.0.0.1:8080", "https://127.0.0.1:8080", "http://127.0.0.1:80", "https://127.0.0.1:80", "http://127.0.0.1", "https://127.0.0.1", "https://drawsome.pictures"].includes(origin)) {
+      console.log("origin accepted:", origin);
       res.header("Access-Control-Allow-Origin", origin); // update to match the domain you will make the request from
       res.header("Access-Control-Allow-Credentials", true);
-      console.log(origin);
       res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    } else {
+      console.log("origin rejected:", origin);
     }
     next();
 });
@@ -176,7 +178,7 @@ app.get("/api/image/:id/", [
     });
 });
 
-app.post("/signup/", [
+app.post("/api/signup/", [
     ev.body("username").notEmpty().escape(),
     ev.body("password").notEmpty()
 ], (req, res, next) => {
@@ -202,7 +204,7 @@ app.post("/signup/", [
     });
 });
 
-app.post("/signin/", [
+app.post("/api/signin/", [
     ev.body("username").notEmpty().escape(),
     ev.body("password").notEmpty()
 ], (req, res, next) => {
@@ -224,7 +226,7 @@ app.post("/signin/", [
     });
 });
 
-app.get("/signout/", (req, res, next) => {
+app.get("/api/signout/", (req, res, next) => {
     req.session.destroy();
     res.setHeader("Set-Cookie", cookie.serialize("username", "", COOKIE_OPTIONS));
     res.redirect("/");
