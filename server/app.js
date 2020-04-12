@@ -90,7 +90,7 @@ app.use((req, res, next) => {
 
 app.use((req, res, next) => {
     let origin = req.get('origin');
-    if (["http://127.0.0.1:8080", "https://127.0.0.1:8080", "https://drawsome.pictures"].includes(origin)) {
+    if (["http://127.0.0.1:8080", "https://127.0.0.1:8080", "http://127.0.0.1:80", "https://127.0.0.1:80", "http://127.0.0.1", "https://127.0.0.1", "https://drawsome.pictures"].includes(origin)) {
       res.header("Access-Control-Allow-Origin", origin); // update to match the domain you will make the request from
       res.header("Access-Control-Allow-Credentials", true);
       console.log(origin);
