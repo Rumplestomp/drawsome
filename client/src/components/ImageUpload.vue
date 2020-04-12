@@ -73,10 +73,13 @@ export default {
             if (response.status >= 400) { throw response.text(); }
             return response.json();
           }).then((text) => {
+            this.errorDialog = false;
+            this.errorText = '';
             // emit event to update backgroundImage in parent component
             this.$emit('update:backgroundImage', text);
           }).catch((err) => {
-            console.err(err);
+            this.errorDialog = true;
+            this.errorText = err;
           });
         }
       }
