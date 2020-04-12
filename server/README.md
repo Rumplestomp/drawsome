@@ -91,3 +91,12 @@ $ curl -X POST
 $ curl -b cookie.txt
        http://localhost:3000/api/image/dRaWsOmEpIcTuReS/
 ```
+
+### Signalling
+
+- description: base path for `socket.io` resources
+- path: `/socket.io/`
+
+```
+$ curl http://localhost:3000/socket.io/
+```
