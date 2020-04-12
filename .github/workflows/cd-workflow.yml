@@ -11,7 +11,7 @@ jobs:
     name: Build Number
     steps:
     - name: Echo
-      runs: |
+      run: |
         echo ${{ github.run_number }}
 
   webpack:
