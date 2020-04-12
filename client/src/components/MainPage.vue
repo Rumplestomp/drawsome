@@ -264,7 +264,11 @@ export default {
       switch (action) {
         case 'init':
           this.layerData = rtcData;
-          this.topLayerNum = Math.max(rtcData[0].z, rtcData[rtcData.length - 1].z);
+          if (rtcData.length > 0) {
+            this.topLayerNum = Math.max(rtcData[0].z, rtcData[rtcData.length - 1].z);
+          } else {
+            this.topLayerNum = 0;
+          }
           break;
         case 'update':
           this.layerData.forEach((curLayer, index) => {
