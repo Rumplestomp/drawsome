@@ -107,7 +107,10 @@ export default {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username: this.user, password: this.pass }),
-      }).then(() => {
+      }).then((response) => {
+        if (response.status >= 400) {
+          throw response.json();
+        }
         this.invalidRegister = false;
         this.invalidCreds = false;
         // close modal upon signing in
@@ -128,7 +131,10 @@ export default {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username: this.user, password: this.pass }),
-      }).then(() => {
+      }).then((response) => {
+        if (response.status >= 400) {
+          throw response.json();
+        }
         this.invalidRegister = false;
         this.invalidCreds = false;
         // close modal upon signing in
