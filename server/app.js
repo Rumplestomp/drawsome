@@ -176,7 +176,7 @@ app.get("/api/image/:id/", [
     });
 });
 
-app.post("/signup/", [
+app.post("/api/signup/", [
     ev.body("username").notEmpty().escape(),
     ev.body("password").notEmpty()
 ], (req, res, next) => {
@@ -202,7 +202,7 @@ app.post("/signup/", [
     });
 });
 
-app.post("/signin/", [
+app.post("/api/signin/", [
     ev.body("username").notEmpty().escape(),
     ev.body("password").notEmpty()
 ], (req, res, next) => {
@@ -224,7 +224,7 @@ app.post("/signin/", [
     });
 });
 
-app.get("/signout/", (req, res, next) => {
+app.get("/api/signout/", (req, res, next) => {
     req.session.destroy();
     res.setHeader("Set-Cookie", cookie.serialize("username", "", COOKIE_OPTIONS));
     res.redirect("/");
