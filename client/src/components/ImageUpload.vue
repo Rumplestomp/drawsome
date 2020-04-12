@@ -68,10 +68,10 @@ export default {
             credentials: 'include',
             body: data,
           }).then((response) => {
-            console.log(response);
+            console.log(response.clone());
             // response.text() is another promise that gets chained
             if (response.status >= 400) { throw response.text(); }
-            return response.text();
+            return response.json();
           }).then((text) => {
             // emit event to update backgroundImage in parent component
             this.$emit('update:backgroundImage', text);
