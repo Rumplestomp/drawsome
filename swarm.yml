@@ -1,13 +1,10 @@
 version: "3.3"
 
-# Build: docker-compose -f swarm.yml build
 # Up:    docker stack deploy -c swarm.yml drawsome
 # Check: docker stack services drawsome
 #        docker service ps drawsome_<frontend|backend|mongodb>
 #        docker service logs drawsome_<frontend|backend|mongodb>
 # Down:  docker stack rm drawsome
-
-# https://github.com/docker/awesome-compose/blob/master/traefik-golang/docker-compose.yml
 
 networks:
   net:
@@ -17,18 +14,16 @@ volumes:
 
 services:
   frontend:
-    image: drawsome/frontend:latest
-    build: ./client
+    image: alexanderursu99/drawsome-frontend:latest
     networks:
       - net
     ports:
-      - 8080:8080
+      - 80:80
     deploy:
       replicas: 1
 
   backend:
-    image: drawesome/backend:latest
-    build: ./server
+    image: alexanderursu99/drawsome-backend:latest
     networks:
       - net
     ports:
