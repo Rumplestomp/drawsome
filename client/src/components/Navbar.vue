@@ -101,6 +101,7 @@ export default {
         body: JSON.stringify({ username: this.user, password: this.pass }),
       }).then(() => {
         this.invalidRegister = false;
+        this.invalidCreds = false;
         // close modal upon signing in
         this.authenticateModal = false;
         // console.log('response:', response);
@@ -121,13 +122,14 @@ export default {
         },
         body: JSON.stringify({ username: this.user, password: this.pass }),
       }).then(() => {
+        this.invalidRegister = false;
         this.invalidCreds = false;
         // close modal upon signing in
         this.authenticateModal = false;
 
         // console.log('response:', response);
-      }).catch(function () {
-        this.invalidCreds = true;
+      }).catch(function (err) {
+        this.invalidCreds = err;
       }).finally(() => {
         this.user = '';
         this.pass = '';
@@ -146,7 +148,7 @@ export default {
   computed: {
     authUsername() {
       return this.$cookies.get('username') || '';
-    }
+    },
   },
 };
 </script>
