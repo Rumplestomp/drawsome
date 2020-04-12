@@ -61,9 +61,9 @@ const USER_COLLECTION = "users";
 const COOKIE_OPTIONS = {
     path: "/",
     maxAge: 60 * 60 * 24 * 7, // 1 week in seconds
-    httpOnly: false,
-    secure: false,
-    sameSite: false
+    // httpOnly: false,
+    // secure: true,
+    // sameSite: true
 };
 
 // Middleware ------------------------------------------------------------
@@ -75,11 +75,11 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: {
-        httpOnly: false,
-        secure: false,
-        sameSite: false
-    }
+    // cookie: {
+    //     httpOnly: true,
+    //     secure: true,
+    //     sameSite: true
+    // }
 }));
 
 app.use((req, res, next) => {
