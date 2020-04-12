@@ -51,6 +51,7 @@
               :yeet=canvDefault
               :backgroundImage=backgroundImage
               :layerData=layerData
+              :signalClient=signalClient
               v-on:update:defaultConfigKonva="canvasConfig = $event"
             />
           </mdbCard>
@@ -143,10 +144,16 @@ export default {
 
   },
   methods: {
-    pushLayer(layer) {
+    pushLayer(layer, peerAdd = false) {
       layer.setZ(this.topLayerNum);
       this.topLayerNum += 1;
       this.layerData.push(layer);
+      if (!peerAdd) {
+      // if we have peers, inform them of the newly pushed layer
+        this.signalClient.forEach((peer) => {
+          peer.send(JSON.stringify({ action: 'add', data: layer }));
+        });
+      }
     },
     // removing layers is handled in the LayerSideBar component
 
@@ -304,6 +311,9 @@ export default {
           break;
         case 'backgroundImage':
           this.backgroundImage = data.backgroundImage;
+          break;
+        case 'add':
+          this.pushLayer(rtcData, true);
           break;
         default:
           break;

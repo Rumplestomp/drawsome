@@ -1,10 +1,6 @@
 <template>
     <div class="canvass pb-2 px-2">
-        <h2>This is a Canvass component</h2>
-        <p>{{ yeet }}</p>
-        <!-- <div class="canvas-border">
-            <canvas id="main-canvass" v-bind:height=canvHeight v-bind:width=canvWidth></canvas>
-        </div> -->
+        <p v-if="signalClient">Currently sharing with {{signalClient.peers().length}} other users</p>
         <div>
             <!-- RELOAD CONFIGKONVA (watch) BASED ON HEIGHT WIDTH  -->
             <v-stage
@@ -70,6 +66,7 @@ export default {
     yeet: String,
     backgroundImage: String,
     layerData: Array,
+    signalClient: Object, // SimpleSignalClient object
   },
   data: () => ({
     // need list of graphic layers in the canvas
