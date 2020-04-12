@@ -181,7 +181,7 @@ export default {
         peer.on('connect', () => {
           // send layer data to peer
           console.log('peer connected!!');
-          peer.send(JSON.stringify({ data: this.layerData, action: 'init' }));
+          peer.send(JSON.stringify({ data: this.layerData, action: 'init', backgroundImage: this.backgroundImage }));
         });
       }
       peer.on('data', (data) => {
@@ -251,6 +251,15 @@ export default {
         });
       }
     },
+    transmistBackgroundImage() {
+      if (this.signalClient && this.localLayerChange) {
+        this.signalClient.peers().forEach((peer) => {
+          peer.send(JSON.stringify({ backgroundImage: this.backgroundImage }));
+        });
+      } else {
+        this.localLayerChange = true;
+      }
+    },
     /**
      * Handler to update layerData based on RTC peer signals
      * Replaces the layer with matching z value.
@@ -269,6 +278,9 @@ export default {
           } else {
             this.topLayerNum = 0;
           }
+          if (data.backgroundImage) {
+            this.backgroundImage = data.backgroundImage;
+          }
           break;
         case 'update':
           this.layerData.forEach((curLayer, index) => {
@@ -286,6 +298,9 @@ export default {
             }
           });
           break;
+        case 'backgroundImage':
+          this.backgroundImage = data.backgroundImage;
+          break;
         default:
           break;
       }
@@ -302,6 +317,11 @@ export default {
       deep: true,
       handler(newval, oldval) {
         console.log(JSON.parse(JSON.stringify(newval)), JSON.parse(JSON.stringify(oldval)));
+      },
+    },
+    backgroundImage: {
+      handler() {
+        this.transmistBackgroundImage();
       },
     },
   },
