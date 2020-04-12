@@ -36,11 +36,13 @@ jobs:
         name: webpack-artifact
         path: client/dist/
     - name: Build, Tag, Push
-      uses: mattdavis0351/actions/docker-gpr@v1
+      uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        image-name: drawsome-frontend
-        dockerfile-location: client/
+        name: alexanderursu99/drawsome-frontend
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        workdir: client
+        tags: latest
 
   backend:
     runs-on: ubuntu-latest
@@ -49,8 +51,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
     - name: Build, Tag, Push
-      uses: mattdavis0351/actions/docker-gpr@v1
+      uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        image-name: drawsome-backend
-        dockerfile-location: server/
+        name: alexanderursu99/drawsome-backend
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        workdir: server
+        tags: latest
