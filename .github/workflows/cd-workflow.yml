@@ -35,7 +35,6 @@ jobs:
       with:
         name: webpack-artifact
         path: client/dist/
-      run: ls client/dist/
     - name: Build, Tag, Push
       uses: mattdavis0351/actions/docker-gpr@v1
       with:
