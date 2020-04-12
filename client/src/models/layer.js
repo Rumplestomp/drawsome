@@ -2,7 +2,7 @@ import RegularPolygon from './RegularPolygon';
 import Text from './Text';
 
 export default class CanvasLayer {
-  constructor({ fill = 'black', x = 0, y = 0, z = 0, rotation = 0, opacity = 1, scale = 1 } = {}) {
+  constructor({ fill = '#000000', x = 0, y = 0, z = 0, rotation = 0, opacity = 1, scale = 1 } = {}) {
     /** GENERAL DATA */
     // isBackground: bool   REQUIRED A boolean saying whether or not this is the background layer
     this.isBackground = false;
