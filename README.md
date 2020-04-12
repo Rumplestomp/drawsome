@@ -2,11 +2,19 @@
 
 project-cscc09_alex_chedy created by GitHub Classroom
 
-[Project page](https://thierrysans.me/CSCC09/project/)
+[Project Page](https://thierrysans.me/CSCC09/project/)
+
+## Links
+
+[App URL](https://drawsome.pictures)
+
+[Video URL]()
+
+[Doc URL]()
 
 ## Project Title
 
-Drawesome
+Drawsome
 
 ## Team Members
 
@@ -42,29 +50,27 @@ A collaborative web app that lets users draw and save a picture together in real
 ### Communication
 
 - REST API
-- WebSockets/WebRTC (Undecided on specific implementation)
+- WebRTC
 
 ### Infrastructure
 
 - Docker
-- GCP
+- Kubernetes
+- Google Cloud Platform
 
 ### Frameworks and Libraries
 
 - Vue.js
 - Node.js
 - Express.js
-- GraphQL
-- Other supporting libraries, but currently undecided:
-    - Styling (Bootstrap/Material Design)
-    - Canvas (Paper.js/Fabric.js)
-    - WebRTC (TogetherJS/PeerJS/DataChannel.js)
-    - WebSockets (express-ws)
+- Bootstrap and Material Design (mdbvue)
+- konva.js
+- socket.io
 
 ## Top 5 Technical Challenges
 
-- Setting up WebSockets/WebRTC securely
+- Setting up WebRTC
+- Learning and deploying with Kubernetes
 - Setting up 2D canvas manipulation with Vue
 - Synchronization across users
 - Autosaving changes to canvas
-- Learning and deploying new technologies
