@@ -1,5 +1,8 @@
 version: "3.3"
 
+# This was used for early local testing and development
+# Actual deployment is done with manifests in /k8s
+
 # Up:    docker stack deploy -c swarm.yml drawsome
 # Check: docker stack services drawsome
 #        docker service ps drawsome_<frontend|backend|mongodb>
