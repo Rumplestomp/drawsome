@@ -233,8 +233,11 @@ export default {
      * Handler used to transmit specific updated layer data.
      */
     transmitUpdateLayer(layer) {
+      console.log('transmitting update');
+      console.log('local layer change:', this.localLayerChange);
       if (this.signalClient && this.localLayerChange) {
         this.signalClient.peers().forEach((peer) => {
+          console.log('peer found');
           peer.send(JSON.stringify({ data: layer, action: 'update' }));
         });
       } else {
@@ -283,6 +286,7 @@ export default {
           }
           break;
         case 'update':
+          console.log('recieved update from peer');
           this.layerData.forEach((curLayer, index) => {
             if (curLayer.z === rtcData.z) {
               this.$set(this.layerData, index, rtcData);
