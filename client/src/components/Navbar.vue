@@ -89,6 +89,7 @@ export default {
     register() {
       fetch('http://127.0.0.1:3000/signup', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
@@ -98,7 +99,7 @@ export default {
         this.invalidRegister = false;
         // close modal upon signing in
         this.authenticateModal = false;
-        console.log('response:', response);
+        // console.log('response:', response);
       })
         .catch(function (err) {
           this.invalidRegister = err;
@@ -107,6 +108,7 @@ export default {
     signin() {
       fetch('http://127.0.0.1:3000/signin', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
@@ -116,8 +118,8 @@ export default {
         this.invalidCreds = false;
         // close modal upon signing in
         this.authenticateModal = false;
-        
-        console.log('response:', response);
+
+        // console.log('response:', response);
       })
         .catch(function () {
           this.invalidCreds = true;
