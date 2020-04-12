@@ -39,7 +39,10 @@
                   <mdb-input label="Collab Code" icon="lock" type="text"/> -->
                   <mdb-input type="text"      label="Username" v-model="user"/>
                   <mdb-input type="password"  label="Password" v-model="pass"/>
-                  <p v-if="invalidCreds" class="red-text">Invalid Credentials</p>
+                  <!-- Error dialogs -->
+                  <p v-if="invalidCreds" class="red-text">{{ invalidCreds }}</p>
+                  <p v-else-if="invalidRegister" class="red-text">{{ invalidRegister }}</p>
+
                   <div class="text-center">
                     <mdb-btn v-if="registering" type="submit" @click="register">Sign Up</mdb-btn>
                     <mdb-btn v-else             type="submit" @click="signin">Sign In</mdb-btn>
@@ -104,14 +107,17 @@ export default {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username: this.user, password: this.pass }),
-      }).then(() => {
+      }).then((response) => {
+        if (response.status >= 400) {
+          throw response.json();
+        }
         this.invalidRegister = false;
         this.invalidCreds = false;
         // close modal upon signing in
         this.authenticateModal = false;
         // console.log('response:', response);
       }).catch(function (err) {
-        this.invalidRegister = err;
+        this.invalidRegister = err.toString();
       }).finally(() => {
         this.updateAuthData();
       });
@@ -125,7 +131,10 @@ export default {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username: this.user, password: this.pass }),
-      }).then(() => {
+      }).then((response) => {
+        if (response.status >= 400) {
+          throw response.json();
+        }
         this.invalidRegister = false;
         this.invalidCreds = false;
         // close modal upon signing in
@@ -133,8 +142,7 @@ export default {
 
         // console.log('response:', response);
       }).catch(function (err) {
-        this.invalidCreds = err;
-        this.authUsername = '';
+        this.invalidCreds = err.toString();
       }).finally(() => {
         this.updateAuthData();
       });
@@ -143,7 +151,7 @@ export default {
       fetch('http://127.0.0.1:3000/api/signout', {
         method: 'GET',
         credentials: 'include',
-      }).then(() => {
+      }).finally(() => {
         this.updateAuthData();
       });
     },
