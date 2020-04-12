@@ -150,7 +150,7 @@ export default {
       this.layerData.push(layer);
       if (!peerAdd) {
       // if we have peers, inform them of the newly pushed layer
-        this.signalClient.forEach((peer) => {
+        this.signalClient.peers().forEach((peer) => {
           peer.send(JSON.stringify({ action: 'add', data: layer }));
         });
       }
