@@ -1,8 +1,7 @@
-Guide from (https://docs.traefik.io/user-guides/crd-acme/)
+# k8s
 
-`kubectl apply -f XX-filename.yml` in order.
+## learning
 
-Need to run this command before `04`:
-```
-kubectl port-forward --address 0.0.0.0 service/traefik 8000:8000 8080:8080 443:4443 -n default
-```
+Guides:
+- https://cloud.google.com/kubernetes-engine/docs/tutorials/http-balancer
+- https://medium.com/@johnclarke_82232/tls-configuration-in-gke-the-really-simple-way-5af7abb0e8e1
