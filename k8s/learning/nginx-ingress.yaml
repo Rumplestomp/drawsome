@@ -17,13 +17,13 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: web
-          servicePort: 8080
-      - path: /v2/
+          serviceName: frontend
+          servicePort: 80
+      - path: /api/
         backend:
-          serviceName: web2
-          servicePort: 8080
-      - path: /v3/
+          serviceName: backend
+          servicePort: 3000
+      - path: /socket.io/
         backend:
-          serviceName: web2
-          servicePort: 8080
+          serviceName: backend
+          servicePort: 3000

@@ -6,6 +6,14 @@ on:
       - master
 
 jobs:
+  buildno:
+    runs-on: ubuntu-latest
+    name: Build Number
+    steps:
+    - name: Echo
+      run: |
+        echo ${{ github.run_number }}
+
   webpack:
     runs-on: ubuntu-latest
     name: Webpack
