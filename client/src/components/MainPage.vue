@@ -214,7 +214,6 @@ export default {
       return new Promise((resolve, reject) => {
         if (!this.signalClient) {
           const socket = io();
-          // const socket = io(`${process.env.HOST}:3000`);
 
           this.signalClient = new SimpleSignalClient(socket);
           // the action to take when discovered by signaling server

@@ -65,7 +65,7 @@ export default {
           data.append('image', imageFile);
           fetch('/api/image', {
             method: 'POST',
-            credentials: 'include',
+            credentials: 'same-origin',
             body: data,
           }).then((response) => {
             console.log(response.clone());
@@ -77,9 +77,9 @@ export default {
             this.errorText = '';
             // emit event to update backgroundImage in parent component
             this.$emit('update:backgroundImage', text);
-          }).catch((err) => {
+          }).catch(async (err) => {
             this.errorDialog = true;
-            this.errorText = err;
+            this.errorText = await err;
           });
         }
       }
