@@ -213,7 +213,7 @@ export default {
     connectSignalingServer() {
       return new Promise((resolve, reject) => {
         if (!this.signalClient) {
-          const socket = io('127.0.0.1:3000');
+          const socket = io();
           // const socket = io(`${process.env.HOST}:3000`);
 
           this.signalClient = new SimpleSignalClient(socket);

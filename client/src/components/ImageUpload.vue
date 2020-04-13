@@ -63,7 +63,7 @@ export default {
         } else {
           let data = new FormData();
           data.append('image', imageFile);
-          fetch('http://127.0.0.1:3000/api/image', {
+          fetch('/api/image', {
             method: 'POST',
             credentials: 'include',
             body: data,
