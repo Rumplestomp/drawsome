@@ -317,6 +317,7 @@ export default {
           break;
         case 'add':
           this.localLayerChange = false;
+          console.log('add signal from peer', rtcData);
           this.pushLayer(new CanvasLayer(rtcData), true);
           break;
         default:
