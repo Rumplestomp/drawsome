@@ -144,14 +144,12 @@ export default {
 </script>
 <style scoped>
   .SideBarItem{
-    /* background-color: #00ddff; */
     border: teal;
   }
   .opened{
     background-color: rgba(235,235,235, 0.7);
   }
   .SideBarTitle{
-    /* overflow: wrap; */
     transition: font-weight 0.15s;
     font-weight: unset;
     border-bottom: 2px rgba(222, 222, 222, 0.8) solid;

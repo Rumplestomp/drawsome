@@ -245,7 +245,6 @@ export default {
      */
     transmitUpdateLayer(layer) {
       console.log('transmitting update');
-      console.log('local layer change:', this.localLayerChange);
       if (this.signalClient && this.localLayerChange) {
         this.signalClient.peers().forEach((peer) => {
           console.log('peer found');
