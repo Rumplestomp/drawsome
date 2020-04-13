@@ -8,7 +8,7 @@ project-cscc09_alex_chedy created by GitHub Classroom
 
 [App URL](https://drawsome.pictures)
 
-[Video URL]()
+[Video URL](https://youtu.be/-fjoRI7we1U)
 
 [Doc URL](server/README.md)
 

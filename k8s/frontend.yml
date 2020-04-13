@@ -13,7 +13,7 @@ spec:
         run: frontend
     spec:
       containers:
-      - image: alexanderursu99/drawsome-frontend:64
+      - image: alexanderursu99/drawsome-frontend:67
         imagePullPolicy: IfNotPresent
         name: frontend
         ports:
