@@ -213,7 +213,7 @@ export default {
     connectSignalingServer() {
       return new Promise((resolve, reject) => {
         if (!this.signalClient) {
-          const socket = io();
+          const socket = io('https://drawsome.pictures');
 
           this.signalClient = new SimpleSignalClient(socket);
           // the action to take when discovered by signaling server
