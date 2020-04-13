@@ -213,8 +213,7 @@ export default {
     connectSignalingServer() {
       return new Promise((resolve, reject) => {
         if (!this.signalClient) {
-          const socket = io();
-          // const socket = io(`${process.env.HOST}:3000`);
+          const socket = io('https://drawsome.pictures');
 
           this.signalClient = new SimpleSignalClient(socket);
           // the action to take when discovered by signaling server
@@ -246,7 +245,6 @@ export default {
      */
     transmitUpdateLayer(layer) {
       console.log('transmitting update');
-      console.log('local layer change:', this.localLayerChange);
       if (this.signalClient && this.localLayerChange) {
         this.signalClient.peers().forEach((peer) => {
           console.log('peer found');

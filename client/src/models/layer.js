@@ -26,7 +26,6 @@ export default class CanvasLayer {
     // layerType: str       The type of layer (set when layerObject is set)
     this.layerType = layerType;
   }
-  // TODO: ADD VALIDATION? OK.
   /** Function for adding polygon data to the layerObject */
   createRegularPolygon(data) {
     const shape = new RegularPolygon(data);

@@ -12,9 +12,6 @@
       <mdbDropdown tag="li" class="nav-item">
           <mdbDropdownToggle v-if="authUsername"  tag="a" navLink slot="toggle" waves-fixed>{{authUsername}}</mdbDropdownToggle>
           <mdbDropdownToggle v-else               tag="a" navLink slot="toggle" waves-fixed>Profile</mdbDropdownToggle>
-          <!-- <form>
-            <mdbInput type="text" class="text-white" placeholder="Search" aria-label="Search" label navInput/>
-          </form> -->
           <mdbDropdownMenu right>
             <div v-if="authUsername">
               <mdbDropdownItem @click.native="signout">Sign Out</mdbDropdownItem>
@@ -34,9 +31,6 @@
                   <mdb-modal-title v-else             tag="h4" bold class="w-100">Sign In</mdb-modal-title>
                 </mdb-modal-header>
                 <mdb-modal-body class="mx-3 grey-text">
-                  <!-- <mdb-btn color="" @click="peerHost">Start Session</mdb-btn>
-                  <p v-if="collabCode">Your Collab code: {{collabCode}}</p>
-                  <mdb-input label="Collab Code" icon="lock" type="text"/> -->
                   <mdb-input type="text"      label="Username" v-model="user"/>
                   <mdb-input type="password"  label="Password" v-model="pass"/>
                   <!-- Error dialogs -->
@@ -115,7 +109,6 @@ export default {
         this.invalidCreds = false;
         // close modal upon signing in
         this.authenticateModal = false;
-        // console.log('response:', response);
       }).catch(function (err) {
         this.invalidRegister = err.toString();
       }).finally(() => {
@@ -139,8 +132,6 @@ export default {
         this.invalidCreds = false;
         // close modal upon signing in
         this.authenticateModal = false;
-
-        // console.log('response:', response);
       }).catch(function (err) {
         this.invalidCreds = err.toString();
       }).finally(() => {

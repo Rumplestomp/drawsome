@@ -99,7 +99,6 @@ export default {
       img.onload = () => {
         this.setKonvaConfig({ width: img.width, height: img.height });
       };
-      // TODO: move all existing layers to within new canvas
       return img;
     },
   },
@@ -132,7 +131,6 @@ export default {
       margin: 3px;
     }
     .mainCanvas{
-      /* border: solid teal 1px; */
       box-shadow: 0px 0px 5px 2px #999999;
     }
 </style>

@@ -76,7 +76,6 @@ export default {
           this.$set(this.layerData[i], 'z', newZ);
           this.$set(this.layerData[i - increment], 'z', oldZ);
           // swap postitions in array, but keep data reactive
-          // [this.layerData[i], this.layerData[i + increment]] = [this.layerData[i + increment], this.layerData[i]];
           this.layerData.splice(Math.min(i, i - increment), 2, this.layerData[Math.max(i, i - increment)], this.layerData[Math.min(i, i - increment)]);
         }
       }
@@ -95,7 +94,6 @@ export default {
 <style scoped>
   .LayerSideBar{
     padding: 0.50vw 0.50vw;
-    /* border-radius: 0.5em; */
     background-color: orange;
   }
 </style>
