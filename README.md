@@ -7,6 +7,7 @@ project-cscc09_alex_chedy created by GitHub Classroom
 ## Links
 
 [App URL](https://drawsome.pictures)
+(NOTE: Producion environment has unexpected issues: setting background image and collaboration are non-functional at this time)
 
 [Video URL]()
 
