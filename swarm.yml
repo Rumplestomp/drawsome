@@ -9,6 +9,13 @@ version: "3.3"
 #        docker service logs drawsome_<frontend|backend|mongodb>
 # Down:  docker stack rm drawsome
 
+# This setup no longer reflects the production environment
+# perfectly. One reverse proxy should be exposed on port 80
+# which routes requests correctly to the frontend and backend
+# servers. In this environment, requests to the backend must
+# specify port 3000, and so relative routes don't work as they
+# normally would
+
 networks:
   net:
 
