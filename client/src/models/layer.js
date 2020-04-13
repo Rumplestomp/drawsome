@@ -2,7 +2,7 @@ import RegularPolygon from './RegularPolygon';
 import Text from './Text';
 
 export default class CanvasLayer {
-  constructor({ fill = '#000000', x = 0, y = 0, z = 0, rotation = 0, opacity = 1, scale = 1 } = {}) {
+  constructor({ fill = '#000000', x = 0, y = 0, z = 0, rotation = 0, opacity = 1, scale = 1, layerObject = null, layerType = null } = {}) {
     /** GENERAL DATA */
     // isBackground: bool   REQUIRED A boolean saying whether or not this is the background layer
     this.isBackground = false;
@@ -22,9 +22,9 @@ export default class CanvasLayer {
     this.scale = scale;
 
     // layerObject: object  The object that contains the specific data relating to the particular type of layer
-    this.layerObject = null;
+    this.layerObject = layerObject;
     // layerType: str       The type of layer (set when layerObject is set)
-    this.layerType = null;
+    this.layerType = layerType;
   }
   // TODO: ADD VALIDATION? OK.
   /** Function for adding polygon data to the layerObject */

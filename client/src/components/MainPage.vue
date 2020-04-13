@@ -99,7 +99,7 @@ import ImageUpload from './ImageUpload';
 import LayerSideBar from './sidebar/LayerSideBar';
 import LayerInputForm from './LayerInputForm';
 import Navbar from './Navbar';
-
+import CanvasLayer from '../models/layer';
 
 export default {
   name: 'MainPage',
@@ -148,7 +148,7 @@ export default {
       layer.setZ(this.topLayerNum);
       this.topLayerNum += 1;
       this.layerData.push(layer);
-      if (!peerAdd) {
+      if (!peerAdd && this.signalClient) {
       // if we have peers, inform them of the newly pushed layer
         this.signalClient.peers().forEach((peer) => {
           peer.send(JSON.stringify({ action: 'add', data: layer }));
@@ -313,7 +313,7 @@ export default {
           this.backgroundImage = data.backgroundImage;
           break;
         case 'add':
-          this.pushLayer(rtcData, true);
+          this.pushLayer(new CanvasLayer(rtcData), true);
           break;
         default:
           break;
