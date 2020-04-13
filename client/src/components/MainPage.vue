@@ -145,7 +145,9 @@ export default {
   },
   methods: {
     pushLayer(layer, peerChange = false) {
-      layer.setZ(this.topLayerNum);
+      if (!peerChange) {
+        layer.setZ(this.topLayerNum);
+      }
       this.topLayerNum += 1;
       this.layerData.push(layer);
       // if this was a local change, notify any peers
@@ -299,7 +301,7 @@ export default {
             if (curLayer.z === rtcData.z) {
               this.$set(this.layerData, index, rtcData);
             } else {
-              this.pushLayer(rtcData);
+              this.pushLayer(new CanvasLayer(rtcData), true);
             }
           });
           break;
