@@ -316,8 +316,8 @@ export default {
           this.backgroundImage = data.backgroundImage;
           break;
         case 'add':
-          this.pushLayer(new CanvasLayer(rtcData), true);
           this.localLayerChange = false;
+          this.pushLayer(new CanvasLayer(rtcData), true);
           break;
         default:
           break;
