@@ -144,11 +144,12 @@ export default {
 
   },
   methods: {
-    pushLayer(layer, peerAdd = false) {
+    pushLayer(layer, peerChange = false) {
       layer.setZ(this.topLayerNum);
       this.topLayerNum += 1;
       this.layerData.push(layer);
-      if (!peerAdd && this.signalClient) {
+      // if this was a local change, notify any peers
+      if (!peerChange && this.signalClient) {
       // if we have peers, inform them of the newly pushed layer
         this.signalClient.peers().forEach((peer) => {
           peer.send(JSON.stringify({ action: 'add', data: layer }));
