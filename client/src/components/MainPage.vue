@@ -147,8 +147,10 @@ export default {
     pushLayer(layer, peerChange = false) {
       if (!peerChange) {
         layer.setZ(this.topLayerNum);
+        this.topLayerNum += 1;
+      } else {
+        this.topLayerNum = layer.z + 1;
       }
-      this.topLayerNum += 1;
       this.layerData.push(layer);
       // if this was a local change, notify any peers
       if (!peerChange && this.signalClient) {
