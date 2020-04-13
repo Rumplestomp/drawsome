@@ -99,7 +99,7 @@ export default {
   },
   methods: {
     register() {
-      fetch('http://127.0.0.1:3000/api/signup', {
+      fetch('/api/signup', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -123,7 +123,7 @@ export default {
       });
     },
     signin() {
-      fetch('http://127.0.0.1:3000/api/signin', {
+      fetch('/api/signin', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -148,7 +148,7 @@ export default {
       });
     },
     signout() {
-      fetch('http://127.0.0.1:3000/api/signout', {
+      fetch('/api/signout/', {
         method: 'GET',
         credentials: 'include',
       }).finally(() => {
