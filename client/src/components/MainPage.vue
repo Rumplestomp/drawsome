@@ -99,7 +99,7 @@ import ImageUpload from './ImageUpload';
 import LayerSideBar from './sidebar/LayerSideBar';
 import LayerInputForm from './LayerInputForm';
 import Navbar from './Navbar';
-
+import CanvasLayer from '../models/layer';
 
 export default {
   name: 'MainPage',
@@ -144,11 +144,14 @@ export default {
 
   },
   methods: {
-    pushLayer(layer, peerAdd = false) {
-      layer.setZ(this.topLayerNum);
+    pushLayer(layer, peerChange = false) {
+      if (!peerChange) {
+        layer.setZ(this.topLayerNum);
+      }
       this.topLayerNum += 1;
       this.layerData.push(layer);
-      if (!peerAdd) {
+      // if this was a local change, notify any peers
+      if (!peerChange && this.signalClient) {
       // if we have peers, inform them of the newly pushed layer
         this.signalClient.peers().forEach((peer) => {
           peer.send(JSON.stringify({ action: 'add', data: layer }));
@@ -298,7 +301,7 @@ export default {
             if (curLayer.z === rtcData.z) {
               this.$set(this.layerData, index, rtcData);
             } else {
-              this.pushLayer(rtcData);
+              this.pushLayer(new CanvasLayer(rtcData), true);
             }
           });
           break;
@@ -313,7 +316,7 @@ export default {
           this.backgroundImage = data.backgroundImage;
           break;
         case 'add':
-          this.pushLayer(rtcData, true);
+          this.pushLayer(new CanvasLayer(rtcData), true);
           break;
         default:
           break;
