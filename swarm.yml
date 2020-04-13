@@ -24,7 +24,7 @@ volumes:
 
 services:
   frontend:
-    image: alexanderursu99/drawsome-frontend:latest
+    image: alexanderursu99/drawsome-frontend:62
     networks:
       - net
     ports:
@@ -33,7 +33,7 @@ services:
       replicas: 1
 
   backend:
-    image: alexanderursu99/drawsome-backend:latest
+    image: alexanderursu99/drawsome-backend:62
     networks:
       - net
     ports:
