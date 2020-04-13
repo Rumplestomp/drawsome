@@ -61,9 +61,9 @@ const USER_COLLECTION = "users";
 const COOKIE_OPTIONS = {
     path: "/",
     maxAge: 60 * 60 * 24 * 7, // 1 week in seconds
-    // httpOnly: false,
-    // secure: true,
-    // sameSite: true
+    httpOnly: false,
+    secure: true,
+    sameSite: true
 };
 
 // Middleware ------------------------------------------------------------
@@ -75,11 +75,11 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    // cookie: {
-    //     httpOnly: true,
-    //     secure: true,
-    //     sameSite: true
-    // }
+    cookie: {
+        httpOnly: true,
+        secure: true,
+        sameSite: true
+    }
 }));
 
 app.use((req, res, next) => {
@@ -89,14 +89,14 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-    let origin = req.get('origin');
-    if (["http://127.0.0.1:8080", "https://127.0.0.1:8080", "http://127.0.0.1:80", "https://127.0.0.1:80", "http://127.0.0.1", "https://127.0.0.1", "https://drawsome.pictures"].includes(origin)) {
-      console.log("origin accepted:", origin);
-      res.header("Access-Control-Allow-Origin", origin); // update to match the domain you will make the request from
-      res.header("Access-Control-Allow-Credentials", true);
-      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    let origin = req.get("origin");
+    if (["http://drawsome.pictures", "https://drawsome.pictures"].includes(origin)) {
+        console.log("origin accepted:", origin);
+        res.header("Access-Control-Allow-Origin", origin); // update to match the domain you will make the request from
+        res.header("Access-Control-Allow-Credentials", true);
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     } else {
-      console.log("origin rejected:", origin);
+        console.log("origin rejected:", origin);
     }
     next();
 });
@@ -241,7 +241,7 @@ const io = socket(server);
 const signalServer = signal(io);
 const allIDs = new Set();
 
-io.origins(["backend:*", "frontend:*", "127.0.0.1:*"]);
+io.origins("drawsome.pictures");
 
 signalServer.on("discover", (request) => {
     const clientID = request.socket.id;
