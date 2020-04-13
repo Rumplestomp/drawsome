@@ -300,8 +300,6 @@ export default {
           this.layerData.forEach((curLayer, index) => {
             if (curLayer.z === rtcData.z) {
               this.$set(this.layerData, index, rtcData);
-            } else {
-              this.pushLayer(new CanvasLayer(rtcData), true);
             }
           });
           break;
@@ -317,6 +315,7 @@ export default {
           break;
         case 'add':
           this.pushLayer(new CanvasLayer(rtcData), true);
+          this.localLayerChange = false;
           break;
         default:
           break;
