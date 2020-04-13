@@ -13,7 +13,7 @@ spec:
         run: backend
     spec:
       containers:
-      - image: alexanderursu99/drawsome-backend:40
+      - image: alexanderursu99/drawsome-backend:64
         imagePullPolicy: IfNotPresent
         name: backend
         ports:
