@@ -83,22 +83,20 @@ export default {
     // initial emit of config settings for parent component to grab
     this.$emit('update:defaultConfigKonva', this.defaultConfigKonva);
   },
-  // this is all placeholder shits.
   mounted() {
 
   },
-
   computed: {
     backgroundImageLayer() {
       if (!this.backgroundImage) {
         return null;
       }
-      // const imageURL = URL.createObjectURL(this.backgroundImage);
-      const img = new window.Image();
-      img.src = `http://127.0.0.1:3000/api/image/${this.backgroundImage}`;
+      const img = new Image();
+      img.crossOrigin = 'use-credentials';
       img.onload = () => {
         this.setKonvaConfig({ width: img.width, height: img.height });
       };
+      img.src = `http://127.0.0.1:3000/api/image/${this.backgroundImage}`;
       return img;
     },
   },

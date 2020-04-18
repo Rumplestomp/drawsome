@@ -28,6 +28,8 @@
 // MDB STYLING IMPORTS
 import mdbBtn from 'mdbvue/lib/components/mdbBtn';
 
+const API_URL = process.env.API_HOSTNAME || '';
+
 export default {
   name: 'ImageUpload',
   components: {
@@ -63,9 +65,9 @@ export default {
         } else {
           let data = new FormData();
           data.append('image', imageFile);
-          fetch('/api/image', {
+          fetch(`${API_URL}/api/image/`, {
             method: 'POST',
-            credentials: 'same-origin',
+            credentials: 'include',
             body: data,
           }).then((response) => {
             console.log(response.clone());

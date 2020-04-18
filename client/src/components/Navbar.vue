@@ -52,6 +52,8 @@ import mdbModalBody from 'mdbvue/lib/components/mdbModalBody';
 import mdbModalHeader from 'mdbvue/lib/components/mdbModalHeader';
 import mdbModalTitle from 'mdbvue/lib/components/mdbModalTitle';
 
+const API_URL = process.env.API_HOSTNAME || '';
+
 export default {
   name: 'Navbar',
   components: {
@@ -90,10 +92,11 @@ export default {
   created() {
     // intialize username if they are signed in
     this.updateAuthData();
+    console.log('process.env:', process.env);
   },
   methods: {
     register() {
-      fetch('/api/signup', {
+      fetch(`${API_URL}/api/signup`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -116,7 +119,7 @@ export default {
       });
     },
     signin() {
-      fetch('/api/signin', {
+      fetch(`${API_URL}/api/signin`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -139,7 +142,7 @@ export default {
       });
     },
     signout() {
-      fetch('/api/signout/', {
+      fetch(`${API_URL}/api/signout/`, {
         method: 'GET',
         credentials: 'include',
       }).finally(() => {
@@ -150,6 +153,7 @@ export default {
       this.user = '';
       this.pass = '';
       this.authUsername = this.$cookies.get('username') || '';
+      console.log('username from cookies:', this.$cookies.get('username'));
     },
   },
 };

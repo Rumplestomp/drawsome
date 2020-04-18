@@ -79,7 +79,7 @@
 
 // UTILITY IMPORTS //
 // import Peer from 'simple-peer';
-import io from 'socket.io-client';
+import io from 'socket.io-client/dist/socket.io';
 import SimpleSignalClient from 'simple-signal-client';
 // MDB STYLING IMPORTS //
 import mdbContainer from 'mdbvue/lib/components/mdbContainer';
@@ -100,6 +100,9 @@ import LayerSideBar from './sidebar/LayerSideBar';
 import LayerInputForm from './LayerInputForm';
 import Navbar from './Navbar';
 import CanvasLayer from '../models/layer';
+
+const DOMAIN_NAME = process.env.DOMAIN_NAME || 'https://drawsome.pictures';
+// in production, this would be 'https://drawsome.pictures'
 
 export default {
   name: 'MainPage',
@@ -213,7 +216,7 @@ export default {
     connectSignalingServer() {
       return new Promise((resolve, reject) => {
         if (!this.signalClient) {
-          const socket = io('https://drawsome.pictures');
+          const socket = io(DOMAIN_NAME);
 
           this.signalClient = new SimpleSignalClient(socket);
           // the action to take when discovered by signaling server
