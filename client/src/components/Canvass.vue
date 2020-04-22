@@ -60,6 +60,8 @@
     </div>
 </template>
 <script>
+const DOMAIN_NAME = process.env.DOMAIN_NAME || 'https://drawsome.pictures';
+
 export default {
   name: 'Canvass',
   props: {
@@ -96,7 +98,7 @@ export default {
       img.onload = () => {
         this.setKonvaConfig({ width: img.width, height: img.height });
       };
-      img.src = `http://127.0.0.1:3000/api/image/${this.backgroundImage}`;
+      img.src = `${DOMAIN_NAME}/api/image/${this.backgroundImage}`;
       return img;
     },
   },
