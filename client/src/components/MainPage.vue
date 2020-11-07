@@ -45,7 +45,7 @@
           </mdbRow>
 
           <!-- Main Canvas Component -->
-          <mdbCard>
+          <mdbCard class="max-content">
             <Canvass
               ref="canvass"
               :yeet=canvDefault
@@ -101,7 +101,8 @@ import LayerInputForm from './LayerInputForm';
 import Navbar from './Navbar';
 import CanvasLayer from '../models/layer';
 
-const DOMAIN_NAME = process.env.DOMAIN_NAME || 'https://drawsome.pictures';
+// const DOMAIN_NAME = process.env.DOMAIN_NAME || 'https://drawsome.pictures';
+const DOMAIN_NAME = window.location.origin;
 // in production, this would be 'https://drawsome.pictures'
 
 export default {
@@ -368,4 +369,8 @@ a {
   background-color: rgb(244,244,244);
   height: 100vh;
 }
+.max-content{
+  width: max-content;
+}
+
 </style>

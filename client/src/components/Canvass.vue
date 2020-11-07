@@ -124,7 +124,8 @@ export default {
 <style scoped>
     .canvass{
         border: 3px solid rgba(250,158,58, 0.5);
-        overflow:scroll;
+        overflow:auto;
+        padding-top: 0.5rem;
     }
     .wrapper{
       border: 3px solid teal;
