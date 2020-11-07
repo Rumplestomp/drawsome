@@ -1,2 +1,3 @@
-FROM nginx:1.17
+FROM nginx
+COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
 COPY dist/ /usr/share/nginx/html
