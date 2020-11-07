@@ -46,7 +46,7 @@ jobs:
     - name: Build, Tag, Push
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        name: alexanderursu99/drawsome-frontend
+        name: rumplestomp/drawsome-frontend
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         workdir: client
@@ -61,7 +61,7 @@ jobs:
     - name: Build, Tag, Push
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        name: alexanderursu99/drawsome-backend
+        name: rumplestomp/drawsome-backend
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         workdir: server
